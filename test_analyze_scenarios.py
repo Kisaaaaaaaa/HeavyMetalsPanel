@@ -100,7 +100,7 @@ def test_different_scenarios():
                 print("✅ 场景3成功")
                 # 检查页面内容
                 content = analyze_response.text
-                if "数据分析" in content and "重金属检测平台" in content:
+                if "数据分析" in content and "多参数水质实时监测与智能化分析系统" in content:
                     print("✅ 页面内容正确")
                 else:
                     print("⚠️ 页面内容可能有问题")

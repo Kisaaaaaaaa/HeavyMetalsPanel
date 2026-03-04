@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>数据分析 - 重金属检测平台</title>
+    <title>数据分析 - 多参数水质实时监测与智能化分析系统</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-    <script src="https://webapi.amap.com/maps?v=2.0&key=131c82664ed5c484aedad8082e2af203"></script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key={{ amap_js_key }}"></script>
     <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
     <script src="https://webapi.amap.com/ui/1.1/ui/overlay/MarkerClusterer.js"></script>
     <style>
@@ -198,7 +198,7 @@ hr {
 </head>
 <body>
 <div class="analyze-container">
-    <h2>数据分析 - 重金属检测平台</h2>
+    <h2>数据分析 - 多参数水质实时监测与智能化分析系统</h2>
     <div class="top-section">
         <div class="side-chart">
             <div id="charts"></div>
@@ -310,9 +310,9 @@ hr {
         });
         marker.setMap(map);
     });
-    var points = {{ (map_data or []) | tojson | safe }};
-    var metal_stats = {{ (metal_stats or []) | tojson | safe }};
-    var exceedStats = {{ (exceed_stats or {}) | tojson | safe }};
+    var points = JSON.parse('{{ (map_data or []) | tojson | safe }}');
+    var metal_stats = JSON.parse('{{ (metal_stats or []) | tojson | safe }}');
+    var exceedStats = JSON.parse('{{ (exceed_stats or {}) | tojson | safe }}');
     
     // 确保变量是有效的
     if (typeof points !== 'object' || !Array.isArray(points)) {

@@ -819,7 +819,7 @@ def upload_file():
         else:
             flash("请上传文件或输入至少一个金属值", "danger")
         return redirect(url_for('upload_file'))
-    return render_template('upload.html')
+    return render_template('upload.html', amap_js_key=GAODE_JS_KEY)
 
 
 # 路由：数据分析页
@@ -992,7 +992,8 @@ def analyze():
                     map_data=map_data,
                     metal_stats=pollution_stats,
                     analysis_results=[],  # 如需详情可扩展
-                    exceed_stats=exceed_stats
+                    exceed_stats=exceed_stats,
+                    amap_js_key=GAODE_JS_KEY
                 )
             except Exception as e:
                 print(f'数据序列化错误: {e}')
@@ -1003,7 +1004,8 @@ def analyze():
                     map_data=[],
                     metal_stats=[],
                     analysis_results=[],
-                    exceed_stats={}
+                    exceed_stats={},
+                    amap_js_key=GAODE_JS_KEY
                 )
             
         except Exception as e:
@@ -1269,8 +1271,10 @@ def view_data(data_id):
 
     return "数据不存在"
 
-# 高德 Web 服务 Key（优先读取环境变量）
-GAODE_KEY = os.environ.get('GAODE_WEB_KEY', 'acde71bcaaef49f02db050665cfcff6e')
+# 高德 Key 配置：允许只配置一个 key（GAODE_WEB_KEY 或 GAODE_JS_KEY）即可同时用于两类场景
+_DEFAULT_GAODE_KEY = '131c82664ed5c484aedad8082e2af203'
+GAODE_KEY = os.environ.get('GAODE_WEB_KEY') or os.environ.get('GAODE_JS_KEY') or _DEFAULT_GAODE_KEY
+GAODE_JS_KEY = os.environ.get('GAODE_JS_KEY') or os.environ.get('GAODE_WEB_KEY') or _DEFAULT_GAODE_KEY
 
 @app.route('/api/regeo', methods=['POST'])
 def api_regeo():
