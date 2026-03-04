@@ -1,0 +1,42 @@
+        // 折线图：数据记录（示例）
+        var lineChart = echarts.init(document.getElementById('data-line'));
+        lineChart.setOption({
+            title: { text: '数据记录（2025年7月）', left: 'center' },
+            xAxis: { type: 'category', data: ['2025-07-01', '2025-07-11', '2025-07-21', '2025-07-31'] },
+            yAxis: { type: 'value' },
+            series: [{
+                type: 'line',
+                data: [110, 180, 150, 130],
+                itemStyle: { color: '#1890ff' }
+            }]
+        });
+
+        var radarChart = echarts.init(document.getElementById('metal-radar'));
+        radarChart.setOption({
+            title: { text: '水质指标分布', left: 'center' },
+            radar: {
+                center: ['50%', '60%'], // 下移雷达图
+                radius: '70%',          // 适当缩小
+                indicator: [
+                    { name: 'COD', max: 1 },
+                    { name: 'Turbidity', max: 1 },
+                    { name: 'pH', max: 1 },
+                    { name: 'BOD', max: 1 },
+                    { name: 'Ammonia_N', max: 1 },
+                    { name: 'DO', max: 1 },
+                    { name: 'Pb', max: 1 },
+                    { name: 'Cd', max: 1 },
+                    { name: 'Hg', max: 1 }
+                ],
+                name: {
+                    color: '#00eaff',
+                    fontSize: 15
+                }
+            },
+            series: [{
+                type: 'radar',
+                data: [
+                    { value: [0.7, 0.5, 0.6, 0.4, 0.3, 0.8, 0.2, 0.4, 0.3], name: '水质指标' }
+                ]
+            }]
+        }); 

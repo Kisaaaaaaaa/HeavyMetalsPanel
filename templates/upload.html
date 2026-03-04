@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>重金属数据上传</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://webapi.amap.com/maps?v=2.0&key=131c82664ed5c484aedad8082e2af203"></script>
+    <script src="https://webapi.amap.com/ui/1.1/main.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .upload-main {
+            display: flex;
+            max-width: 1800px;
+            width: 96vw;
+            margin: 32px auto;
+            background: rgba(30,41,59,0.95);
+            border-radius: 1.2rem;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+            overflow: hidden;
+        }
+        .upload-left {
+            flex: 3;
+            padding: 32px 16px;
+            min-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-title {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        #map {
+            width: 100%;
+            min-width: 400px;
+            height: 600px;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            border: none;
+        }
+        .upload-right {
+            flex: 2;
+            padding: 32px 16px;
+            min-width: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .form-card {
+            background: rgba(51,65,85,0.7);
+            border-radius: 0.7rem;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+            padding: 18px 20px 10px 20px;
+            margin-bottom: 22px;
+        }
+        .form-card h3 {
+            color: #3b82f6;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+            max-width: 50%;
+        }
+        .form-group label {
+            width: 90px;
+            min-width: 90px;
+            margin-bottom: 0;
+            margin-right: 10px;
+            text-align: right;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+        .form-group input {
+            min-width: 0;
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            border: 1.5px solid #334155;
+            background: rgba(15, 23, 42, 0.85);
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 8px #3b82f6;
+        }
+        .form-group input[readonly] {
+            background: rgba(51, 65, 85, 0.5);
+            color: #94a3b8;
+        }
+        .form-group input[type="file"] {
+            min-width: 320px;
+            width: 95%;
+            background: #1e293b;
+            color: #e2e8f0;
+            border: none;
+            font-size: 1.08rem;
+            padding: 0.8rem 1rem;
+        }
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #818cf8, #3b82f6);
+            transform: scale(1.02);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px; /* Adjust as needed for spacing between buttons */
+            margin-top: 20px; /* Add some space above the button group */
+        }
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .form-actions .btn {
+            min-width: 140px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            .upload-main { flex-direction: column; }
+            .upload-left, .upload-right { min-width: 0; width: 100%; }
+            .form-row { flex-direction: column; }
+            .form-group { max-width: 100%; }
+            .form-actions { flex-direction: column; }
+        }
+        /* 强制全屏样式覆盖 */
+        .upload-main {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: none !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        .upload-left, .upload-right {
+            min-width: 0 !important;
+            height: 100vh !important;
+            padding: 0 !important;
+        }
+        #map {
+            min-width: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        .form-card {
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-main">
+        <!-- 左侧地图 -->
+        <div class="upload-left">
+            <div class="map-title">请在地图上选择采样点位置</div>
+            <div id="map"></div>
+        </div>
+        <!-- 右侧表单 -->
+        <div class="upload-right">
+            <!-- 设备数据选择位置模式 -->
+            <div id="deviceLocationMode" style="display: none;">
+                <div class="form-card">
+                    <h3><i class="fas fa-map-marker-alt"></i> 选择检测位置</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>经度</label>
+                            <input type="text" id="device_longitude" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>纬度</label>
+                            <input type="text" id="device_latitude" readonly required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>省份</label>
+                            <input type="text" id="device_province" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>城市</label>
+                            <input type="text" id="device_city" readonly required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>位置描述</label>
+                        <input type="text" id="device_location_name" placeholder="例如: 某水质监测点">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="selectLocationOnly" class="btn btn-primary">
+                            <i class="fas fa-map-marker-alt"></i> 确认位置
+                        </button>
+                        <button type="button" id="switchToNormalMode" class="btn btn-secondary">
+                            <i class="fas fa-upload"></i> 切换到数据上传模式
+                        </button>
+                        <button type="button" id="cancelLocation" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> 取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 正常上传模式 -->
+            <form id="normalUploadForm" method="post" enctype="multipart/form-data">
+                <div class="form-card">
+                    <h3>采样点信息</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>经度</label>
+                            <input type="text" id="longitude" name="longitude" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>纬度</label>
+                            <input type="text" id="latitude" name="latitude" readonly required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>省份</label>
+                            <input type="text" id="province" name="province" readonly required>
+                        </div>
+                        <div class="form-group">
+                            <label>城市</label>
+                            <input type="text" id="city" name="city" readonly required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-card">
+                    <h3>检测数据</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>铅(Pb) μg/L</label>
+                            <input type="number" step="0.001" name="pb" placeholder="请输入检测值">
+                        </div>
+                        <div class="form-group">
+                            <label>镉(Cd) μg/L</label>
+                            <input type="number" step="0.001" name="cd" placeholder="请输入检测值">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>汞(Hg) μg/L</label>
+                            <input type="number" step="0.001" name="hg" placeholder="请输入检测值">
+                        </div>
+                        <div class="form-group">
+                            <label>铜(Cu) μg/L</label>
+                            <input type="number" step="0.001" name="cu" placeholder="请输入检测值">
+                        </div>
+                    </div>
+                </div>
+                <div id="other-metals-list">
+                    <div class="form-row other-metal-row">
+                        <label class="other-label">其他名称</label>
+                        <input type="text" name="other_name[]" placeholder="如Zn、As等" class="other-input">
+                        <label class="other-label">其他值</label>
+                        <input type="number" step="0.001" name="other_value[]" placeholder="请输入检测值" class="other-input">
+                        <button type="button" class="btn" onclick="removeOtherMetalRow(this)">删除</button>
+                        <button type="button" class="btn add-btn" onclick="addOtherMetalRow()">添加</button>
+                    </div>
+                </div>
+                <div class="form-card">
+                    <h3>文件上传</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>上传文件</label>
+                            <input type="file" name="file" accept=".csv,.xlsx,.xls">
+                        </div>
+                        <div class="form-group" style="visibility:hidden;"></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">提交数据</button>
+                    <a href="/dashboard" class="btn">返回看板</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+function addOtherMetalRow() {
+    var row = document.createElement('div');
+    row.className = 'form-row other-metal-row';
+    row.innerHTML = `
+        <label class="other-label">其他名称</label>
+        <input type="text" name="other_name[]" placeholder="如Zn、As等" class="other-input">
+        <label class="other-label">其他值</label>
+        <input type="number" step="0.001" name="other_value[]" placeholder="请输入检测值" class="other-input">
+        <button type="button" class="btn" onclick="removeOtherMetalRow(this)">删除</button>
+        <button type="button" class="btn add-btn" onclick="addOtherMetalRow()">添加</button>
+    `;
+    document.getElementById('other-metals-list').appendChild(row);
+    updateAddBtns();
+}
+function removeOtherMetalRow(btn) {
+    btn.parentElement.remove();
+    updateAddBtns();
+}
+function updateAddBtns() {
+    var rows = document.querySelectorAll('#other-metals-list .other-metal-row');
+    rows.forEach(function(row, idx) {
+        var addBtn = row.querySelector('.add-btn');
+        if (addBtn) addBtn.style.display = (idx === rows.length - 1) ? '' : 'none';
+    });
+}
+window.onload = function() {
+    // 检查是否从设备页面跳转过来
+    const isDeviceMode = sessionStorage.getItem('returnToDevice') === 'true';
+    const deviceData = sessionStorage.getItem('deviceDataToSave');
+    
+    if (isDeviceMode && deviceData) {
+        // 设备数据选择模式
+        showDeviceMode();
+    } else {
+        // 正常上传模式
+        showNormalMode();
+    }
+    
+    updateAddBtns();
+}
+
+function showDeviceMode() {
+    document.getElementById('deviceLocationMode').style.display = 'block';
+    document.getElementById('normalUploadForm').style.display = 'none';
+    document.querySelector('.map-title').textContent = '请在地图上选择检测位置';
+    
+    // 设置地图点击事件（设备模式）
+    setupDeviceMapMode();
+    
+    // 设置按钮事件
+    setupDeviceModeEvents();
+}
+
+function showNormalMode() {
+    document.getElementById('deviceLocationMode').style.display = 'none';
+    document.getElementById('normalUploadForm').style.display = 'block';
+    document.querySelector('.map-title').textContent = '请在地图上选择采样点位置';
+    
+    // 设置地图点击事件（正常模式）
+    setupNormalMapMode();
+}
+
+function reverseGeocode(lng, lat, onSuccess, onFail) {
+    if (typeof AMap !== 'undefined') {
+        AMap.plugin('AMap.Geocoder', function() {
+            var geocoder = new AMap.Geocoder({ radius: 1000, extensions: 'all' });
+            geocoder.getAddress([lng, lat], function(status, result) {
+                if (status === 'complete' && result && result.regeocode && result.regeocode.addressComponent) {
+                    var comp = result.regeocode.addressComponent;
+                    var province = comp.province || '';
+                    var city = comp.city || comp.district || '';
+                    if (province || city) {
+                        onSuccess(province, city);
+                    } else {
+                        onFail();
+                    }
+                } else {
+                    onFail();
+                }
+            });
+        });
+        return;
+    }
+
+    onFail();
+}
+
+function setupDeviceMapMode() {
+    var mapContainer = document.getElementById('map');
+    if (mapContainer && typeof AMap !== 'undefined') {
+        var map = new AMap.Map('map', {
+            zoom: 5,
+            center: [104.114129, 37.550339],
+            resizeEnable: true
+        });
+        var marker = null;
+        
+        map.on('click', function(e){
+            var lng = e.lnglat.getLng();
+            var lat = e.lnglat.getLat();
+            
+            // 更新设备模式的表单
+            document.getElementById('device_longitude').value = lng.toFixed(6);
+            document.getElementById('device_latitude').value = lat.toFixed(6);
+            
+            if(marker){
+                marker.setPosition([lng, lat]);
+            }else{
+                marker = new AMap.Marker({ position: [lng, lat] });
+                map.add(marker);
+            }
+            
+            reverseGeocode(
+                lng,
+                lat,
+                function(province, city) {
+                    document.getElementById('device_province').value = province;
+                    document.getElementById('device_city').value = city;
+                },
+                function() {
+                    document.getElementById('device_province').value = '';
+                    document.getElementById('device_city').value = '';
+                }
+            );
+        });
+    }
+}
+
+function setupNormalMapMode() {
+    var mapContainer = document.getElementById('map');
+    if (mapContainer && typeof AMap !== 'undefined') {
+        var map = new AMap.Map('map', {
+            zoom: 5,
+            center: [104.114129, 37.550339],
+            resizeEnable: true
+        });
+        var marker = null;
+        
+        map.on('click', function(e){
+            var lng = e.lnglat.getLng();
+            var lat = e.lnglat.getLat();
+            
+            // 更新正常模式的表单
+            document.getElementById('longitude').value = lng.toFixed(6);
+            document.getElementById('latitude').value = lat.toFixed(6);
+            
+            if(marker){
+                marker.setPosition([lng, lat]);
+            }else{
+                marker = new AMap.Marker({ position: [lng, lat] });
+                map.add(marker);
+            }
+            
+            reverseGeocode(
+                lng,
+                lat,
+                function(province, city) {
+                    document.getElementById('province').value = province;
+                    document.getElementById('city').value = city;
+                },
+                function() {
+                    document.getElementById('province').value = '';
+                    document.getElementById('city').value = '';
+                }
+            );
+        });
+    }
+}
+
+function setupDeviceModeEvents() {
+    // 确认位置（不保存数据）
+    document.getElementById('selectLocationOnly').addEventListener('click', function() {
+        const latitude = document.getElementById('device_latitude').value;
+        const longitude = document.getElementById('device_longitude').value;
+        const city = document.getElementById('device_city').value;
+        const locationName = document.getElementById('device_location_name').value;
+        
+        if (!latitude || !longitude || !city) {
+            alert('请先在地图上选择位置');
+            return;
+        }
+        
+        // 将位置信息存储到 localStorage，供设备页面使用
+        const locationData = {
+            latitude: latitude,
+            longitude: longitude,
+            city: city,
+            locationName: locationName
+        };
+        
+        localStorage.setItem('locationSelected', JSON.stringify(locationData));
+        
+        // 清理 sessionStorage
+        sessionStorage.removeItem('deviceDataToSave');
+        sessionStorage.removeItem('returnToDevice');
+        
+        alert('位置信息已确认，返回设备页面');
+        // 关闭当前窗口
+        window.close();
+    });
+    
+    // 切换到正常上传模式
+    document.getElementById('switchToNormalMode').addEventListener('click', function() {
+        // 清理设备模式的状态
+        sessionStorage.removeItem('deviceDataToSave');
+        sessionStorage.removeItem('returnToDevice');
+        
+        // 切换到正常模式
+        showNormalMode();
+        
+        // 如果已经选择了位置，将位置信息复制到正常模式的表单中
+        const deviceLat = document.getElementById('device_latitude').value;
+        const deviceLng = document.getElementById('device_longitude').value;
+        const deviceProvince = document.getElementById('device_province').value;
+        const deviceCity = document.getElementById('device_city').value;
+        
+        if (deviceLat && deviceLng) {
+            document.getElementById('latitude').value = deviceLat;
+            document.getElementById('longitude').value = deviceLng;
+            document.getElementById('province').value = deviceProvince;
+            document.getElementById('city').value = deviceCity;
+        }
+    });
+    
+    // 取消操作
+    document.getElementById('cancelLocation').addEventListener('click', function() {
+        // 清理 sessionStorage
+        sessionStorage.removeItem('deviceDataToSave');
+        sessionStorage.removeItem('returnToDevice');
+        // 关闭当前窗口
+        window.close();
+    });
+}
+</script>
+</body>
+</html>

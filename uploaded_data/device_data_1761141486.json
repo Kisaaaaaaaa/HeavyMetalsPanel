@@ -1,0 +1,43 @@
+{
+  "record_id": 1,
+  "location": {
+    "latitude": 37.432608,
+    "longitude": 111.913657,
+    "city": "吕梁市",
+    "location_name": "设备检测点"
+  },
+  "data": {
+    "Pb": "0.0114",
+    "Cd": "0.0083",
+    "Hg": "0.0014",
+    "Cu": "1.17",
+    "Cr": "0.076",
+    "Ni": "0.070",
+    "As": "0.0149",
+    "Mn": "0.079",
+    "Fe": "0.34",
+    "Zn": "1.98",
+    "Se": "0.0066",
+    "Ba": "1.17",
+    "Al": "0.21",
+    "Ag": "0.046",
+    "TDS": 782,
+    "Temperature": "18.2",
+    "pH": "8.4",
+    "Turbidity": "0.98"
+  },
+  "timestamp": 1761141486,
+  "is_exceed": true,
+  "exceed_items": [
+    "Pb",
+    "Cd",
+    "Hg",
+    "Cu",
+    "Cr",
+    "As",
+    "Fe",
+    "Zn",
+    "Ba",
+    "Al"
+  ]
+}

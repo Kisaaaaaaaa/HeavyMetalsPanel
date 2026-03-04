@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>重金属检测看板</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="{{ url_for('static', filename='js/china.js') }}"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- 顶部：标题 + 用户信息 -->
+        <div class="header">
+            <h1>重金属检测数据统计</h1>
+            <div class="user-info">
+                当前用户：{{ session.user }} | <a href="/logout">退出</a>
+                <a href="/upload" class="button" style="margin-left: 1rem;">数据上传</a>
+                <a href="/analyze" class="button" style="margin-left: 0.5rem;">数据分析</a>
+                <a href="/api_page" class="button" style="margin-left: 0.5rem;">设备管理</a>
+            </div>
+        </div>
+
+        <!-- 核心布局：左侧 + 中间 + 右侧 -->
+        <div class="layout">
+            <!-- 左侧：污染类型饼图 + 接入场景 -->
+            <div class="left-panel">
+                <div id="metal-radar" style="width:100%;height:100%;margin:0;padding:0;"></div>
+                <div id="scene-funnel" style="width:100%;height:100%;margin:0;padding:0;"></div>
+                <div id="pollution-donut" style="width:100%;height:100%;margin:0;padding:0;"></div>
+            </div>
+
+            <!-- 中间：中国地图 + 监控列表 -->
+            <div class="middle-panel">
+                <!-- 中国地图 -->
+                <div class="card" id="china-map" style="height: 500px;"></div>
+                <!-- 监控列表 -->
+                <div class="card">
+                    <h3>监控列表</h3>
+                    <table>
+                        <tr><th>省份/城市</th><th>检测量</th><th>安全数</th></tr>
+                        <tbody id="monitor-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 右侧：预警信息 + 报警记录 + 数据记录 -->
+            <div class="right-panel">
+                <div class="warning-panel">
+                    <h3>预警信息</h3>
+                    <ul class="warning-list">
+                        {% for w in warnings[:10] %}
+                        <li>
+                            <span class="warning-icon">⚠️</span>
+                            <span class="warning-time">{{ w.time }}</span>
+                            <span class="warning-location">{{ w.province }}{{ w.city }}</span>
+                            <span class="warning-metal">{{ w.metal }}超标</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="province-rank-panel">
+                    <h3>各省超标排行榜</h3>
+                    <div id="province-bar" style="width:100%;height:220px;"></div>
+                </div>
+                <div class="card">
+                    <h3>本月超标趋势</h3>
+                    <div id="exceed-trend" style="height: 220px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 新增底部分析图 -->
+    <div class="bottom-panel">
+        <!-- 折线图 -->
+        <div class="card" id="data-line-bottom" style="height: 300px;"></div>
+        <!-- 散点图 -->
+        <div class="card" id="scatter-plot" style="height: 300px;"></div>
+    </div>
+
+    <!-- ECharts 初始化 -->
+    <script>
+        // 解析后端传来的json数据
+        var sensorData = JSON.parse('{{ sensor_data|safe }}');
+        var pollution = JSON.parse('{{ pollution|safe }}');
+        var provinceExceedCount = JSON.parse('{{ province_exceed_count|safe }}');
+        // 省份超标数据转为ECharts格式
+        var provinceMapData = Object.keys(provinceExceedCount).map(function(prov){
+            return {name: prov, value: provinceExceedCount[prov]};
+        });
+        var maxExceed = Math.max.apply(null, provinceMapData.map(function(d){return d.value;}));
+        // 构造超标城市点数据
+        var cityExceedMap = {};
+        sensorData.forEach(function(item){
+            if(item.city && item.cadmium > 0 && item.longitude && item.latitude) {
+                var key = item.city + '_' + item.province;
+                if(!cityExceedMap[key]) {
+                    cityExceedMap[key] = {count: 0, coord: [item.longitude, item.latitude], city: item.city, province: item.province};
+                }
+                cityExceedMap[key].count += item.cadmium;
+            }
+        });
+        var cityExceedPoints = Object.values(cityExceedMap).map(function(item){
+            // 颜色深度和点大小与超标数相关
+            var val = item.count;
+            var color = val > 10 ? '#b30000' : val > 5 ? '#e74c3c' : '#ff9999';
+            var size = Math.min(20 + val * 5, 60);
+            return {
+                name: item.city,
+                value: item.coord.concat(val),
+                symbolSize: size,
+                itemStyle: { color: color, borderColor: '#fff', borderWidth: 1 },
+                label: { show: false }
+            };
+        });
+        // 监控列表渲染用sensorData
+        // ECharts数据
+        var chinaMapData = sensorData.map(function(item){
+            return {name: item.city, value: item.cadmium};
+        });
+        var pollutionPieData = pollution.types.map(function(t, i){
+            return {value: pollution.counts[i], name: t};
+        });
+
+        // 雷达图：超标金属类型分布
+        var radarChart = echarts.init(document.getElementById('metal-radar'));
+        radarChart.setOption({
+            title: {
+                text: '水质指标分布',
+                left: 'center',
+                textStyle: {
+                    color: '#00eaff',
+                    fontSize: 17,
+                    fontWeight: 'bold',
+                    fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif',
+                    align: 'center'
+                }
+            },
+            radar: {
+                center: ['50%', '60%'], // 下移雷达图
+                radius: '70%',          // 适当缩小
+                indicator: [
+                    { name: 'COD', max: 1 },
+                    { name: 'Turbidity', max: 1 },
+                    { name: 'pH', max: 1 },
+                    { name: 'BOD', max: 1 },
+                    { name: 'Ammonia_N', max: 1 },
+                    { name: 'DO', max: 1 },
+                    { name: 'Pb', max: 1 },
+                    { name: 'Cd', max: 1 },
+                    { name: 'Hg', max: 1 }
+                ],
+                name: {
+                    color: '#00eaff',
+                    fontSize: 15
+                }
+            },
+            series: [{
+                type: 'radar',
+                data: [
+                    { value: [0.7, 0.5, 0.6, 0.4, 0.3, 0.8, 0.2, 0.4, 0.3], name: '水质指标' }
+                ]
+            }]
+        });
+
+        // 漏斗图：检测场景数据量
+        var funnelChart = echarts.init(document.getElementById('scene-funnel'));
+        funnelChart.setOption({
+            title: {
+                text: '检测场景数据量',
+                left: 'center',
+                textStyle: {
+                    color: '#00eaff',
+                    fontSize: 17,
+                    fontWeight: 'bold',
+                    fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif',
+                    align: 'center'
+                }
+            },
+            series: [{
+                type: 'funnel',
+                left: '10%',
+                top: 60,
+                bottom: 60,
+                width: '80%',
+                height: '70%',   // 新增，让图更高
+                min: 0,
+                max: 100,
+                data: [
+                    { value: 80, name: '河流' },
+                    { value: 60, name: '工厂' },
+                    { value: 40, name: '农田' },
+                    { value: 20, name: '城市' }
+                ]
+            }]
+        });
+
+        // 折线图：数据记录
+        var lineChart = echarts.init(document.getElementById('data-line-bottom'));
+        lineChart.setOption({
+            title: { text: '数据记录（2025年10月）', left: 'center' },
+            xAxis: { type: 'category', data: ['2025-10-01', '2025-10-06', '2025-10-11', '2025-10-16', '2025-10-21', '2025-10-26', '2025-10-31'] },
+            yAxis: { type: 'value' },
+            series: [{
+                type: 'line',
+                data: [110, 135, 180, 170, 150, 140, 130],
+                itemStyle: { color: '#1890ff' }
+            }]
+        });
+
+        // 散点图：检测点浓度分布
+        var scatterChart = echarts.init(document.getElementById('scatter-plot'));
+        scatterChart.setOption({
+            title: { text: '检测点浓度分布', left: 'center' },
+            xAxis: { type: 'time' },
+            yAxis: { type: 'value', name: '浓度(mg/L)' },
+            series: [{
+                type: 'scatter',
+                data: [
+                    ['2025-10-01', 0.12],
+                    ['2025-10-03', 0.18],
+                    ['2025-10-06', 0.22],
+                    ['2025-10-10', 0.19],
+                    ['2025-10-13', 0.28],
+                    ['2025-10-16', 0.21],
+                    ['2025-10-20', 0.33],
+                    ['2025-10-23', 0.27],
+                    ['2025-10-27', 0.25],
+                    ['2025-10-31', 0.20]
+                ],
+                itemStyle: { color: '#ff5722' }
+            }]
+        });
+
+        // 污染种类环形图（大屏美化优化）
+        var donutChart = echarts.init(document.getElementById('pollution-donut'));
+        donutChart.setOption({
+            title: {
+                text: '污染种类情况',
+                left: 'center',
+                top: 30,
+                textStyle: {
+                    color: '#00eaff',
+                    fontSize: 17,
+                    fontWeight: 'bold',
+                    fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif',
+                    align: 'center'
+                }
+            },
+            tooltip: { trigger: 'item' },
+            series: [{
+                name: '污染种类',
+                type: 'pie',
+                radius: ['35%', '55%'],
+                center: ['50%', '63%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: true,
+                    position: 'outside',
+                    color: function(params) {
+                        var colorMap = {
+                            '严重': '#ff4b4b',
+                            '中上度': '#ffa500',
+                            '中度': '#8a2be2',
+                            '中下度': '#ffe066',
+                            '低度': '#5bc0eb',
+                            '正常': '#00eaff'
+                        };
+                        return colorMap[params.name] || '#00eaff';
+                    },
+                    fontWeight: 'bold',
+                    fontSize: 11,
+                    fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif',
+                    align: 'center',
+                    overflow: 'break'
+                },
+                labelLine: { show: true, length: 22, length2: 18, lineStyle: { color: '#fff' } },
+                data: [
+                    { value: 10, name: '严重', itemStyle: { color: '#ff4b4b' } },
+                    { value: 15, name: '中上度', itemStyle: { color: '#ffa500' } },
+                    { value: 20, name: '中度', itemStyle: { color: '#8a2be2' } },
+                    { value: 18, name: '中下度', itemStyle: { color: '#ffe066' } },
+                    { value: 25, name: '低度', itemStyle: { color: '#5bc0eb' } },
+                    { value: 12, name: '正常', itemStyle: { color: '#00eaff' } }
+                ]
+            }]
+        });
+
+        // 渲染监控列表（展示最近五条）
+        var tableBody = document.getElementById('monitor-table-body');
+        var latest = sensorData.slice(-5).reverse();
+        tableBody.innerHTML = latest.map(function(item){
+            var metals = item.metals || {};
+            var total = Object.keys(metals).length;
+            var safe = 0;
+            for (var k in metals) {
+                if (metals[k] && metals[k].exceed === false) safe++;
+            }
+            return `<tr><td>${item.province || ''}/${item.city || ''}</td><td>${total}</td><td>${safe}</td></tr>`;
+        }).join('');
+
+        // 中国地图：省份着色+城市红点标记（无geo，仅series）
+        var mapChart = echarts.init(document.getElementById('china-map'));
+        mapChart.setOption({
+            title: { text: '全国各省金属超标情况', left: 'center', textStyle: { color: '#b7ffff', fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif' } },
+            visualMap: {
+                min: 0,
+                max: maxExceed > 0 ? maxExceed : 1,
+                left: 'left',
+                bottom: '10%',
+                text: ['高', '低'],
+                inRange: { color: ['#fff5eb', '#fcae91', '#fb6a4a', '#cb181d'] },
+                calculable: true,
+                textStyle: { color: '#b7ffff', fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif' }
+            },
+            series: [
+                {
+                    type: 'map',
+                    map: 'china',
+                    data: provinceMapData,
+                    label: { show: true, color: '#b7ffff', fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif' },
+                    zoom: 1.3,
+                    center: [104.0, 35.5]
+                },
+                {
+                    type: 'scatter',
+                    coordinateSystem: 'geo',
+                    geoIndex: 0,
+                    data: cityExceedPoints,
+                    symbol: 'circle',
+                    symbolSize: function(val) { return Math.min(20 + val[2] * 5, 60); },
+                    itemStyle: {
+                        color: function(params) {
+                            var val = params.value[2];
+                            return val > 10 ? '#b30000' : val > 5 ? '#e74c3c' : '#ff9999';
+                        },
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    },
+                    label: { show: false },
+                    zlevel: 10
+                }
+            ]
+        });
+
+        // 各省超标排行榜条形图
+        var barTopProvinces = JSON.parse('{{ bar_top_provinces|tojson|safe }}');
+        window.barData = barTopProvinces.map(function(item) {
+            return {name: item[0], value: item[1]};
+        });
+        if (window.barData.length > 0 && document.getElementById('province-bar')) {
+            var barChart = echarts.init(document.getElementById('province-bar'));
+            barChart.setOption({
+                grid: { left: 60, right: 20, top: 20, bottom: 30 },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: { color: '#b7ffff', fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif' },
+                    splitLine: { show: false }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: window.barData.map(function(d){return d.name;}),
+                    axisLabel: { color: '#b7ffff', fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif' }
+                },
+                series: [{
+                    type: 'bar',
+                    data: window.barData.map(function(d){return d.value;}),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+                            {offset: 0, color: '#ffb199'},
+                            {offset: 1, color: '#ff0844'}
+                        ])
+                    },
+                    barWidth: 18,
+                    label: { show: true, position: 'right', color: '#fff', fontWeight: 'bold' }
+                }]
+            });
+        }
+
+        // 本月超标趋势折线图
+        var exceedTrendChart = echarts.init(document.getElementById('exceed-trend'));
+        exceedTrendChart.setOption({
+            title: { text: '', left: 'center' },
+            xAxis: { type: 'category', data: ['2025-10-01', '2025-10-06', '2025-10-11', '2025-10-16', '2025-10-21', '2025-10-26', '2025-10-31'] },
+            yAxis: { type: 'value', name: '超标数' },
+            series: [{
+                type: 'line',
+                data: [12, 18, 25, 22, 30, 28, 20],
+                itemStyle: { color: '#ff4b4b' },
+                smooth: true
+            }]
+        });
+    </script>
+</body>
+</html>

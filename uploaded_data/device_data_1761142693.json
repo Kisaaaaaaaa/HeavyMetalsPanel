@@ -1,0 +1,42 @@
+{
+  "record_id": 9,
+  "location": {
+    "latitude": 37.037383,
+    "longitude": 110.209098,
+    "city": "榆林市",
+    "location_name": "设备检测点"
+  },
+  "data": {
+    "Pb": "0.0022",
+    "Cd": "0.0098",
+    "Hg": "0.0009",
+    "Cu": "0.15",
+    "Cr": "0.033",
+    "Ni": "0.045",
+    "As": "0.0125",
+    "Mn": "0.196",
+    "Fe": "0.59",
+    "Zn": "0.12",
+    "Se": "0.0165",
+    "Ba": "0.85",
+    "Al": "0.04",
+    "Ag": "0.060",
+    "TDS": 1008,
+    "Temperature": "29.4",
+    "pH": "7.0",
+    "Turbidity": "1.42"
+  },
+  "timestamp": 1761142693,
+  "is_exceed": true,
+  "exceed_items": [
+    "Cd",
+    "As",
+    "Mn",
+    "Fe",
+    "Se",
+    "Ba",
+    "Ag",
+    "TDS",
+    "Turbidity"
+  ]
+}

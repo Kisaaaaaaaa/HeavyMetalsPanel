@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>测试Analyze页面</title>
+</head>
+<body>
+    <h1>Analyze页面测试</h1>
+    <div id="status">正在测试...</div>
+    
+    <script>
+        async function testAnalyzePage() {
+            const statusDiv = document.getElementById('status');
+            
+            try {
+                // 测试登录
+                const loginResponse = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'username=test&password=test'
+                });
+                
+                if (loginResponse.ok) {
+                    statusDiv.innerHTML += '<br>✅ 登录成功';
+                    
+                    // 测试analyze页面
+                    const analyzeResponse = await fetch('/analyze');
+                    
+                    if (analyzeResponse.ok) {
+                        statusDiv.innerHTML += '<br>✅ Analyze页面访问成功';
+                        statusDiv.innerHTML += '<br>✅ 所有测试通过！';
+                    } else {
+                        statusDiv.innerHTML += `<br>❌ Analyze页面访问失败: ${analyzeResponse.status}`;
+                        const errorText = await analyzeResponse.text();
+                        statusDiv.innerHTML += `<br>错误内容: ${errorText.substring(0, 200)}...`;
+                    }
+                } else {
+                    statusDiv.innerHTML += '<br>❌ 登录失败';
+                }
+            } catch (error) {
+                statusDiv.innerHTML += `<br>❌ 测试异常: ${error.message}`;
+            }
+        }
+        
+        // 页面加载后开始测试
+        window.onload = testAnalyzePage;
+    </script>
+</body>
+</html>

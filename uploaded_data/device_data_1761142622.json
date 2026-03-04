@@ -1,0 +1,24 @@
+{
+  "record_id": 8,
+  "location": {
+    "latitude": 39.9042,
+    "longitude": 116.4074,
+    "city": "北京市",
+    "location_name": "测试设备点"
+  },
+  "data": {
+    "Pb": "0.012",
+    "Cd": "0.004",
+    "Hg": "0.0008",
+    "Cu": "0.5",
+    "TDS": "800",
+    "Temperature": "25.0",
+    "pH": "7.2",
+    "Turbidity": "0.5"
+  },
+  "timestamp": 1761142622,
+  "is_exceed": true,
+  "exceed_items": [
+    "Pb"
+  ]
+}

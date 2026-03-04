@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>数据详情分析 - 重金属检测平台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #10151c 0%, #1a2330 60%, #232b3a 100%) !important;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+            letter-spacing: 0.02em;
+        }
+        .detail-root {
+            margin-top: 0;
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            padding: 0;
+        }
+        .detail-header {
+            padding: 2.5rem 3vw 1.2rem 3vw;
+            border-bottom: 1.5px solid #22313a;
+            background: rgba(24,28,36,0.97);
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #7dd3fc;
+            text-shadow: 0 0 8px #0ea5e9, 0 2px 8px #1e293b;
+            text-align: center;
+        }
+        .detail-meta {
+            display: flex;
+            gap: 2.5rem;
+            padding: 1.2rem 3vw 0.5rem 3vw;
+            font-size: 1.08rem;
+            color: #a5b4fc;
+            background: rgba(24,28,36,0.93);
+            border-bottom: 1px solid #22313a;
+        }
+        .detail-meta span { font-weight: 600; color: #38bdf8; }
+        .detail-main {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            gap: 0;
+            width: 100vw;
+            min-height: 0;
+        }
+        .detail-table-section {
+            flex: 2.2;
+            padding: 2.5rem 3vw 2.5rem 3vw;
+            border-right: 1.5px solid #22313a;
+            background: rgba(24,28,36,0.97);
+            overflow-x: auto;
+        }
+        .detail-table-section h3 {
+            color: #38bdf8;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.08rem;
+            background: transparent;
+        }
+        .detail-table th, .detail-table td {
+            padding: 0.7rem 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+            color: #e2e8f0;
+        }
+        .detail-table th {
+            background: none;
+            color: #7dd3fc;
+            font-weight: 700;
+            font-size: 1.10rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #334155;
+        }
+        .detail-table tr:hover td {
+            background: rgba(59,130,246,0.06);
+        }
+        .detail-charts-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            padding: 2.5rem 3vw 2.5rem 2vw;
+            background: rgba(30,36,48,0.98);
+            min-width: 420px;
+        }
+        .detail-chart-title {
+            color: #38bdf8;
+            font-size: 1.08rem;
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+            letter-spacing: 1px;
+        }
+        .detail-chart-box {
+            width: 100%;
+            height: 320px;
+            background: rgba(22,28,38,0.93);
+            border-radius: 18px;
+            box-shadow: 0 2px 12px 0 rgba(30,41,59,0.13), 0 1.5px 8px #33415533 inset;
+            margin-bottom: 2.2rem;
+            border: 1px solid #22313a;
+            backdrop-filter: blur(1.5px);
+            transition: box-shadow 0.3s;
+        }
+        .detail-back {
+            position: fixed;
+            right: 32px;
+            bottom: 32px;
+            z-index: 1000;
+            background: linear-gradient(90deg, #334155 0%, #0ea5e9 100%);
+            color: #e0f2fe;
+            font-weight: bold;
+            font-size: 1.08rem;
+            padding: 0.7rem 1.3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 8px rgba(30,41,59,0.10);
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+        }
+        .detail-back:hover {
+            background: linear-gradient(90deg, #0ea5e9 0%, #334155 100%);
+            transform: scale(1.04);
+            box-shadow: 0 4px 16px 0 #0ea5e955;
+        }
+        .detail-export {
+            position: fixed;
+            right: 180px;
+            bottom: 32px;
+            z-index: 1000;
+            background: linear-gradient(90deg, #334155 0%, #0ea5e9 100%);
+            color: #e0f2fe;
+            font-weight: bold;
+            font-size: 1.08rem;
+            padding: 0.7rem 1.3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 8px rgba(30,41,59,0.10);
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+        }
+        .detail-export:hover {
+            background: linear-gradient(90deg, #0ea5e9 0%, #334155 100%);
+            transform: scale(1.04);
+            box-shadow: 0 4px 16px 0 #0ea5e955;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            gap: 0.7rem;
+        }
+        .pagination-btn {
+            background: linear-gradient(90deg, #334155 0%, #0ea5e9 100%);
+            color: #e0f2fe;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.4rem 1.1rem;
+            border-radius: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, transform 0.1s;
+        }
+        .pagination-btn.active, .pagination-btn:focus {
+            background: linear-gradient(90deg, #0ea5e9 0%, #334155 100%);
+            color: #fff;
+            transform: scale(1.08);
+        }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .pagination-info {
+            color: #7dd3fc;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .pagination-input {
+            width: 3.2em;
+            padding: 0.2em 0.5em;
+            border-radius: 0.7em;
+            border: 1px solid #334155;
+            background: #1a232b;
+            color: #7dd3fc;
+            font-size: 1.05rem;
+            margin: 0 0.3em;
+            text-align: center;
+        }
+        @media (max-width: 1200px) {
+            .detail-main { flex-direction: column; }
+            .detail-table-section, .detail-charts-section { width: 100vw; min-width: 0; border-right: none; border-bottom: 1.5px solid #22313a; }
+            .detail-charts-section { border-bottom: none; }
+        }
+        @media (max-width: 900px) {
+            .detail-header, .detail-meta, .detail-table-section, .detail-charts-section { padding-left: 2vw; padding-right: 2vw; }
+            .detail-charts-section { min-width: 0; }
+            .detail-chart-box { height: 220px; }
+            .detail-navbar { height: 48px; padding: 0 1vw; }
+            .nav-title { font-size: 1.05rem; }
+            .nav-action-btn { font-size: 0.95rem; padding: 0.4rem 0.7rem; }
+            .detail-root { margin-top: 48px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-root">
+        <div class="detail-header">单条数据详细分析</div>
+        <div class="detail-meta">
+            {% if data.file_name %}文件名：<span>{{ data.file_name }}</span>{% endif %}
+            {% if data.upload_time %}上传时间：<span>{{ data.upload_time }}</span>{% endif %}
+        </div>
+        <div class="detail-main">
+            <div class="detail-table-section">
+                <h3>检测数据明细</h3>
+                <table class="detail-table" id="data-table">
+                    <thead>
+                    <tr>
+                        <th>金属/指标</th>
+                        <th>检测值</th>
+                        <th>是否超标</th>
+                    </tr>
+                    </thead>
+                    <tbody id="data-table-body">
+                    <!-- 数据行由JS渲染 -->
+                    </tbody>
+                </table>
+                <div id="pagination" class="pagination"></div>
+            </div>
+            <div class="detail-charts-section">
+                <div class="detail-chart-title">超标次数分布</div>
+                <div id="exceed_chart" class="detail-chart-box"></div>
+                <div class="detail-chart-title">超标种类分布</div>
+                <div id="pie_chart" class="detail-chart-box"></div>
+            </div>
+        </div>
+        <a href="#" class="detail-export" onclick="exportReport()">导出报告</a>
+        <a href="/analyze" class="detail-back">返回分析</a>
+    </div>
+    <script>
+        // 统计超标次数
+        var analysis = {{ data.analysis | tojson | safe }};
+        var exceedCount = {};
+        var exceedPie = {};
+        analysis.forEach(function(row) {
+            for (var metal in row) {
+                if (row[metal].exceed) {
+                    exceedCount[metal] = (exceedCount[metal] || 0) + 1;
+                    exceedPie[metal] = (exceedPie[metal] || 0) + 1;
+                }
+            }
+        });
+        var metals = Object.keys(exceedCount);
+        var values = metals.map(function(m){ return exceedCount[m]; });
+        var pieData = Object.keys(exceedPie).map(function(m){ return {name: m, value: exceedPie[m]}; });
+
+        // 柱状图
+        var exceedChart = echarts.init(document.getElementById('exceed_chart'));
+        var exceedOption = {
+            xAxis: { type: 'category', data: metals, axisLabel: { color: '#7dd3fc' } },
+            yAxis: { type: 'value', axisLabel: { color: '#7dd3fc' } },
+            series: [{
+                data: values,
+                type: 'bar',
+                itemStyle: { color: '#e74c3c' }
+            }],
+            tooltip: { trigger: 'axis' },
+            grid: { left: 40, right: 20, bottom: 40, top: 40 }
+        };
+        exceedChart.setOption(exceedOption);
+
+        // 饼图
+        var pieChart = echarts.init(document.getElementById('pie_chart'));
+        var pieOption = {
+            series: [{
+                type: 'pie',
+                radius: '60%',
+                data: pieData,
+                label: { color: '#fff' },
+                emphasis: {
+                    itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.5)' }
+                }
+            }],
+            tooltip: { trigger: 'item' },
+        };
+        pieChart.setOption(pieOption);
+        function exportReport() {
+            // 获取所有rows数据（所有分页）
+            var headers = [];
+            document.querySelectorAll('#data-table thead th').forEach(function(th) {
+                headers.push(th.textContent.trim());
+            });
+            var allRows = [headers];
+            rows.forEach(function(r) {
+                allRows.push([
+                    r.metal,
+                    r.value,
+                    r.exceed ? '超标' : '正常',
+                    r.province || '-',
+                    r.city || '-'
+                ]);
+            });
+            // 转为CSV
+            var csv = allRows.map(function(r) {
+                return r.map(function(cell) {
+                    if (cell.indexOf && (cell.indexOf(',') !== -1 || cell.indexOf('"') !== -1)) {
+                        cell = '"' + cell.replace(/"/g, '""') + '"';
+                    }
+                    return cell;
+                }).join(',');
+            }).join('\r\n');
+            // 生成下载
+            var blob = new Blob([csv], {type: 'text/csv'});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = '检测数据明细报告.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        function applyEdit() { alert('申请修改功能待实现'); }
+        function shareData() { alert('分享功能待实现'); }
+
+        // 分页渲染检测数据明细
+        var analysis = {{ data.analysis | tojson | safe }};
+        var rows = [];
+        analysis.forEach(function(row) {
+            for (var metal in row) {
+                rows.push({
+                    metal: metal,
+                    value: row[metal].value,
+                    exceed: row[metal].exceed
+                });
+            }
+        });
+        var pageSize = 10;
+        var currentPage = 1;
+        function renderTablePage(page) {
+            var start = (page - 1) * pageSize;
+            var end = start + pageSize;
+            var pageRows = rows.slice(start, end);
+            var tbody = document.getElementById('data-table-body');
+            tbody.innerHTML = '';
+            pageRows.forEach(function(r) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td>' + r.metal + '</td>' +
+                    '<td>' + r.value + '</td>' +
+                    '<td>' + (r.exceed ? '<span style="color:#f43f5e;font-weight:bold;">超标</span>' : '<span style="color:#22d3ee;">正常</span>') + '</td>';
+                tbody.appendChild(tr);
+            });
+        }
+        function renderPagination() {
+            var totalPages = Math.ceil(rows.length / pageSize);
+            var pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            if (totalPages <= 1) return;
+            // 上一页按钮
+            var prevBtn = document.createElement('button');
+            prevBtn.className = 'pagination-btn';
+            prevBtn.textContent = '上一页';
+            prevBtn.disabled = (currentPage === 1);
+            prevBtn.onclick = function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTablePage(currentPage);
+                    renderPagination();
+                }
+            };
+            pagination.appendChild(prevBtn);
+            // 页码信息
+            var info = document.createElement('span');
+            info.className = 'pagination-info';
+            info.innerHTML = '第 <input type="number" min="1" max="' + totalPages + '" value="' + currentPage + '" class="pagination-input" id="pageInput"> 页 / 共 ' + totalPages + ' 页';
+            pagination.appendChild(info);
+            // 跳转输入
+            setTimeout(function() {
+                var input = document.getElementById('pageInput');
+                input.onkeydown = function(e) {
+                    if (e.key === 'Enter') {
+                        var val = parseInt(input.value);
+                        if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                            currentPage = val;
+                            renderTablePage(currentPage);
+                            renderPagination();
+                        } else {
+                            input.value = currentPage;
+                        }
+                    }
+                };
+                input.onblur = function() {
+                    var val = parseInt(input.value);
+                    if (!isNaN(val) && val >= 1 && val <= totalPages) {
+                        currentPage = val;
+                        renderTablePage(currentPage);
+                        renderPagination();
+                    } else {
+                        input.value = currentPage;
+                    }
+                };
+            }, 0);
+            // 下一页按钮
+            var nextBtn = document.createElement('button');
+            nextBtn.className = 'pagination-btn';
+            nextBtn.textContent = '下一页';
+            nextBtn.disabled = (currentPage === totalPages);
+            nextBtn.onclick = function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTablePage(currentPage);
+                    renderPagination();
+                }
+            };
+            pagination.appendChild(nextBtn);
+        }
+        renderTablePage(currentPage);
+        renderPagination();
+    </script>
+</body>
+</html>

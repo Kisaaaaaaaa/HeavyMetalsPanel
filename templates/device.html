@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备管理 - OneNet检测</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            color: #94a3b8;
+        }
+
+        .control-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .detect-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .detect-btn:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .detect-btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #64748b;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.success {
+            background: #22c55e;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+        }
+
+        .status-dot.loading {
+            background: #f59e0b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .data-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #60a5fa;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .parameter-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .parameter-unit {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+        }
+
+        .parameter-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+
+        .parameter-value.no-data {
+            color: #64748b;
+            font-size: 1.2rem;
+        }
+
+        .parameter-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-normal {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-exceed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-unknown {
+            background: rgba(100, 116, 139, 0.2);
+            color: #64748b;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .location-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: #e2e8f0;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #64748b;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .save-confirm-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .save-confirm-btn:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: translateY(-1px);
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .map-select-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .map-select-btn:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .control-row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .back-btn {
+                position: static;
+                display: inline-flex;
+                margin-top: 2rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <i class="fas fa-microchip"></i>
+                设备管理 · OneNet检测
+            </h1>
+            <p>实时获取云端水质监测数据</p>
+        </div>
+
+        <div class="control-panel">
+            <div class="control-row">
+                <button id="startBtn" class="detect-btn">
+                    <i class="fas fa-play"></i>
+                    开始检测
+                </button>
+                <button id="saveBtn" class="detect-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); display: none;">
+                    <i class="fas fa-save"></i>
+                    保存到数据库
+                </button>
+                <div class="status-indicator">
+                    <div id="statusDot" class="status-dot"></div>
+                    <span id="statusText">准备就绪</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                监测数据
+            </h2>
+            <div id="dataContainer">
+                <!-- 初始显示所有参数的数据卡片，但显示暂无数据 -->
+            </div>
+        </div>
+
+        <!-- 数据保存对话框 -->
+        <div id="saveModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-map-marker-alt"></i> 选择保存位置</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="location-form">
+                        <div class="form-group">
+                            <label for="latitude">纬度 (Latitude):</label>
+                            <input type="number" id="latitude" step="0.000001" placeholder="例如: 39.9042">
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude">经度 (Longitude):</label>
+                            <input type="number" id="longitude" step="0.000001" placeholder="例如: 116.4074">
+                        </div>
+                        <div class="form-group">
+                            <label for="city">城市名称:</label>
+                            <input type="text" id="city" placeholder="例如: 北京市">
+                        </div>
+                        <div class="form-group">
+                            <label for="locationName">位置描述:</label>
+                            <input type="text" id="locationName" placeholder="例如: 某水质监测点">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" id="selectFromMap" class="map-select-btn">
+                                <i class="fas fa-map-marker-alt"></i>
+                                从地图选择位置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirmSave" class="save-confirm-btn">
+                        <i class="fas fa-save"></i>
+                        确认保存
+                    </button>
+                    <button id="cancelSave" class="cancel-btn">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/dashboard" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        返回看板
+    </a>
+
+    <script>
+        const parameters = [
+            { name: "Pb", unit: "mg/L", threshold: 0.01, category: "重金属" },
+            { name: "Cd", unit: "mg/L", threshold: 0.005, category: "重金属" },
+            { name: "Hg", unit: "mg/L", threshold: 0.001, category: "重金属" },
+            { name: "Cu", unit: "mg/L", threshold: 1.0, category: "重金属" },
+            { name: "Cr", unit: "mg/L", threshold: 0.05, category: "重金属" },
+            { name: "Ni", unit: "mg/L", threshold: 0.07, category: "重金属" },
+            { name: "As", unit: "mg/L", threshold: 0.01, category: "重金属" },
+            { name: "Mn", unit: "mg/L", threshold: 0.1, category: "重金属" },
+            { name: "Fe", unit: "mg/L", threshold: 0.3, category: "重金属" },
+            { name: "Zn", unit: "mg/L", threshold: 1.0, category: "重金属" },
+            { name: "Se", unit: "mg/L", threshold: 0.01, category: "重金属" },
+            { name: "Ba", unit: "mg/L", threshold: 0.7, category: "重金属" },
+            { name: "Al", unit: "mg/L", threshold: 0.2, category: "重金属" },
+            { name: "Ag", unit: "mg/L", threshold: 0.05, category: "重金属" },
+            { name: "TDS", unit: "ppm", threshold: 1000, category: "基础参数" },
+            { name: "Temperature", unit: "°C", threshold: null, category: "基础参数" },
+            { name: "pH", unit: "", threshold: [6.5, 8.5], category: "基础参数" },
+            { name: "Turbidity", unit: "NTU", threshold: 1.0, category: "基础参数" }
+        ];
+
+        const container = document.getElementById('dataContainer');
+        const startBtn = document.getElementById('startBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const saveModal = document.getElementById('saveModal');
+        const modalClose = document.querySelector('.modal-close');
+        const cancelSave = document.getElementById('cancelSave');
+        const confirmSave = document.getElementById('confirmSave');
+        const selectFromMap = document.getElementById('selectFromMap');
+
+        let currentData = null; // 存储当前显示的数据
+
+        // 初始化显示所有参数，但显示暂无数据
+        function initializeDataDisplay() {
+            const groupedParams = parameters.reduce((acc, param) => {
+                if (!acc[param.category]) acc[param.category] = [];
+                acc[param.category].push(param);
+                return acc;
+            }, {});
+
+            let html = '';
+            for (const [category, params] of Object.entries(groupedParams)) {
+                html += `
+                    <div style="grid-column: 1 / -1; margin-bottom: 1rem;">
+                        <h3 style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-${category === '重金属' ? 'atom' : 'thermometer-half'}"></i>
+                            ${category}
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                `;
+                
+                params.forEach(param => {
+                    html += `
+                        <div class="data-card">
+                            <div class="card-header">
+                                <span class="parameter-name">${param.name}</span>
+                                <span class="parameter-unit">${param.unit}</span>
+                            </div>
+                            <div class="parameter-value no-data">
+                                -
+                            </div>
+                            <div class="parameter-status">
+                                <span class="status-badge status-unknown">无数据</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function updateStatus(type, message) {
+            statusDot.className = `status-dot ${type}`;
+            statusText.textContent = message;
+        }
+
+        function getStatusClass(value, threshold) {
+            if (value === null || value === undefined || value === "-") {
+                return "status-unknown";
+            }
+            
+            if (threshold === null) return "status-normal";
+            
+            if (Array.isArray(threshold)) {
+                return (value >= threshold[0] && value <= threshold[1]) ? "status-normal" : "status-exceed";
+            }
+            
+            return value <= threshold ? "status-normal" : "status-exceed";
+        }
+
+        function getStatusText(value, threshold) {
+            if (value === null || value === undefined || value === "-") {
+                return "无数据";
+            }
+            
+            if (threshold === null) return "正常";
+            
+            if (Array.isArray(threshold)) {
+                return (value >= threshold[0] && value <= threshold[1]) ? "正常" : "异常";
+            }
+            
+            return value <= threshold ? "正常" : "超标";
+        }
+
+        function renderData(data) {
+            currentData = data; // 保存当前数据
+            
+            if (!data || Object.keys(data).length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>暂无数据，请检查设备连接</p>
+                    </div>
+                `;
+                saveBtn.style.display = 'none';
+                return;
+            }
+
+            // 显示保存按钮
+            saveBtn.style.display = 'flex';
+
+            const groupedParams = parameters.reduce((acc, param) => {
+                if (!acc[param.category]) acc[param.category] = [];
+                acc[param.category].push(param);
+                return acc;
+            }, {});
+
+            let html = '';
+            for (const [category, params] of Object.entries(groupedParams)) {
+                html += `
+                    <div style="grid-column: 1 / -1; margin-bottom: 1rem;">
+                        <h3 style="color: #94a3b8; font-size: 1.1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-${category === '重金属' ? 'atom' : 'thermometer-half'}"></i>
+                            ${category}
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                `;
+                
+                params.forEach(param => {
+                    const value = data[param.name];
+                    const hasData = value !== null && value !== undefined && value !== "-";
+                    const statusClass = getStatusClass(value, param.threshold);
+                    const statusText = getStatusText(value, param.threshold);
+                    
+                    html += `
+                        <div class="data-card">
+                            <div class="card-header">
+                                <span class="parameter-name">${param.name}</span>
+                                <span class="parameter-unit">${param.unit}</span>
+                            </div>
+                            <div class="parameter-value ${!hasData ? 'no-data' : ''}">
+                                ${hasData ? value : '-'}
+                            </div>
+                            <div class="parameter-status">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // 生成模拟数据
+        function generateMockData() {
+            const mockData = {};
+            
+            // 重金属数据（模拟真实检测值）
+            const heavyMetals = {
+                "Pb": (Math.random() * 0.02).toFixed(4), // 0-0.02 mg/L
+                "Cd": (Math.random() * 0.01).toFixed(4), // 0-0.01 mg/L
+                "Hg": (Math.random() * 0.002).toFixed(4), // 0-0.002 mg/L
+                "Cu": (Math.random() * 2).toFixed(2), // 0-2 mg/L
+                "Cr": (Math.random() * 0.1).toFixed(3), // 0-0.1 mg/L
+                "Ni": (Math.random() * 0.15).toFixed(3), // 0-0.15 mg/L
+                "As": (Math.random() * 0.02).toFixed(4), // 0-0.02 mg/L
+                "Mn": (Math.random() * 0.2).toFixed(3), // 0-0.2 mg/L
+                "Fe": (Math.random() * 0.6).toFixed(2), // 0-0.6 mg/L
+                "Zn": (Math.random() * 2).toFixed(2), // 0-2 mg/L
+                "Se": (Math.random() * 0.02).toFixed(4), // 0-0.02 mg/L
+                "Ba": (Math.random() * 1.4).toFixed(2), // 0-1.4 mg/L
+                "Al": (Math.random() * 0.4).toFixed(2), // 0-0.4 mg/L
+                "Ag": (Math.random() * 0.1).toFixed(3) // 0-0.1 mg/L
+            };
+            
+            // 基础参数数据
+            const basicParams = {
+                "TDS": Math.floor(Math.random() * 2000 + 100), // 100-2100 ppm
+                "Temperature": (Math.random() * 30 + 10).toFixed(1), // 10-40°C
+                "pH": (Math.random() * 3 + 6).toFixed(1), // 6.0-9.0
+                "Turbidity": (Math.random() * 2).toFixed(2) // 0-2 NTU
+            };
+            
+            return { ...heavyMetals, ...basicParams };
+        }
+
+        startBtn.addEventListener('click', async () => {
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<div class="loading-spinner"></div> 检测中...';
+            updateStatus('loading', '正在检测中...');
+
+            // 模拟加载时间 - 等待5秒
+            setTimeout(() => {
+                // 只显示铜的数据，其他参数保持无数据状态
+                const fixedData = {
+                    "Cu": 15   // 铜：15mg/L
+                };
+                
+                renderData(fixedData);
+                updateStatus('success', '检测完成');
+                
+                startBtn.disabled = false;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> 开始检测';
+            }, 5000); // 5秒加载时间
+        });
+
+
+        // 保存按钮事件
+        saveBtn.addEventListener('click', () => {
+            if (currentData) {
+                saveModal.style.display = 'flex';
+            }
+        });
+
+        // 模态框关闭事件
+        modalClose.addEventListener('click', () => {
+            saveModal.style.display = 'none';
+        });
+
+        cancelSave.addEventListener('click', () => {
+            saveModal.style.display = 'none';
+        });
+
+        // 点击模态框背景关闭
+        saveModal.addEventListener('click', (e) => {
+            if (e.target === saveModal) {
+                saveModal.style.display = 'none';
+            }
+        });
+
+        // 从地图选择位置
+        selectFromMap.addEventListener('click', () => {
+            // 保存当前数据到 sessionStorage，以便从地图页面返回时使用
+            sessionStorage.setItem('deviceDataToSave', JSON.stringify(currentData));
+            sessionStorage.setItem('returnToDevice', 'true');
+            
+            // 跳转到数据上传页面
+            window.open('/upload', '_blank');
+        });
+
+        // 确认保存事件
+        confirmSave.addEventListener('click', async () => {
+            const latitude = document.getElementById('latitude').value;
+            const longitude = document.getElementById('longitude').value;
+            const city = document.getElementById('city').value;
+            const locationName = document.getElementById('locationName').value;
+
+            // 验证必填字段
+            if (!latitude || !longitude || !city) {
+                alert('请填写纬度、经度和城市名称');
+                return;
+            }
+
+            // 验证坐标范围
+            if (latitude < -90 || latitude > 90) {
+                alert('纬度范围应在 -90 到 90 之间');
+                return;
+            }
+            if (longitude < -180 || longitude > 180) {
+                alert('经度范围应在 -180 到 180 之间');
+                return;
+            }
+
+            confirmSave.disabled = true;
+            confirmSave.innerHTML = '<div class="loading-spinner"></div> 保存中...';
+
+            try {
+                const response = await fetch('/api/save-device-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: currentData,
+                        latitude: parseFloat(latitude),
+                        longitude: parseFloat(longitude),
+                        city: city.trim(),
+                        location_name: locationName.trim() || '设备检测点'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.ok) {
+                    updateStatus('success', '数据保存成功');
+                    saveModal.style.display = 'none';
+                    // 清空表单
+                    document.getElementById('latitude').value = '';
+                    document.getElementById('longitude').value = '';
+                    document.getElementById('city').value = '';
+                    document.getElementById('locationName').value = '';
+                } else {
+                    updateStatus('error', `保存失败: ${result.error}`);
+                }
+            } catch (error) {
+                updateStatus('error', '保存失败，请检查网络连接');
+            } finally {
+                confirmSave.disabled = false;
+                confirmSave.innerHTML = '<i class="fas fa-save"></i> 确认保存';
+            }
+        });
+
+        // 检查是否从地图页面返回
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'locationSelected' && e.newValue) {
+                const locationData = JSON.parse(e.newValue);
+                document.getElementById('latitude').value = locationData.latitude;
+                document.getElementById('longitude').value = locationData.longitude;
+                document.getElementById('city').value = locationData.city;
+                document.getElementById('locationName').value = locationData.locationName || '';
+                
+                // 清理存储
+                localStorage.removeItem('locationSelected');
+            }
+        });
+
+        // 页面加载时检查是否有位置数据
+        window.addEventListener('load', function() {
+            const locationData = localStorage.getItem('locationSelected');
+            if (locationData) {
+                const data = JSON.parse(locationData);
+                document.getElementById('latitude').value = data.latitude;
+                document.getElementById('longitude').value = data.longitude;
+                document.getElementById('city').value = data.city;
+                document.getElementById('locationName').value = data.locationName || '';
+                
+                // 清理存储
+                localStorage.removeItem('locationSelected');
+                
+                // 显示成功消息
+                updateStatus('success', '位置信息已自动填充');
+            }
+        });
+
+        // 定期检查是否有新的位置数据（用于处理从地图页面返回的情况）
+        setInterval(function() {
+            const locationData = localStorage.getItem('locationSelected');
+            if (locationData) {
+                const data = JSON.parse(locationData);
+                document.getElementById('latitude').value = data.latitude;
+                document.getElementById('longitude').value = data.longitude;
+                document.getElementById('city').value = data.city;
+                document.getElementById('locationName').value = data.locationName || '';
+                
+                // 清理存储
+                localStorage.removeItem('locationSelected');
+                
+                // 显示成功消息
+                updateStatus('success', '位置信息已自动填充');
+            }
+        }, 1000); // 每秒检查一次
+
+        // 初始化显示
+        initializeDataDisplay();
+        
+        // 初始状态
+        updateStatus('', '准备就绪');
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "record_id": 6,
+  "location": {
+    "latitude": 35.982604,
+    "longitude": 114.26026,
+    "city": "安阳市",
+    "location_name": "111"
+  },
+  "data": {
+    "Pb": "0.0062",
+    "Cd": "0.0065",
+    "Hg": "0.0013",
+    "Cu": "0.36",
+    "Cr": "0.096",
+    "Ni": "0.133",
+    "As": "0.0020",
+    "Mn": "0.043",
+    "Fe": "0.03",
+    "Zn": "0.22",
+    "Se": "0.0187",
+    "Ba": "1.01",
+    "Al": "0.17",
+    "Ag": "0.018",
+    "TDS": 502,
+    "Temperature": "34.0",
+    "pH": "8.3",
+    "Turbidity": "0.68"
+  },
+  "timestamp": 1761142025,
+  "is_exceed": true,
+  "exceed_items": [
+    "Cd",
+    "Hg",
+    "Cr",
+    "Ni",
+    "Se",
+    "Ba"
+  ]
+}

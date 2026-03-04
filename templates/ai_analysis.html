@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能分析 - 重金属检测平台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 50%, #312e81 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .main-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-title p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .analysis-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #60a5fa;
+        }
+
+        .data-input-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #93c5fd;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .analyze-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+            min-width: 200px;
+        }
+
+        .analyze-button:hover {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            transform: translateY(-2px);
+        }
+
+        .analyze-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .analysis-result {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .risk-level {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .risk-low {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+
+        .risk-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+
+        .risk-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .result-content {
+            line-height: 1.8;
+        }
+
+        .result-section {
+            margin-bottom: 2rem;
+        }
+
+        .result-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-section p {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .recommendations {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .recommendations h5 {
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendations ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .recommendations li {
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            color: #ef4444;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .sample-data-button {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .sample-data-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+        }
+
+        .status-online {
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        .status-offline {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .data-input-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .back-link {
+                position: static;
+                display: block;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <i class="fas fa-brain"></i>
+            AI智能分析
+        </h1>
+    </div>
+
+    <div class="main-container">
+        <div class="page-title">
+            <h2>
+                <i class="fas fa-robot"></i>
+                水质数据AI分析
+            </h2>
+            <p>通过大语言模型分析水质数据，提供专业的风险评估和改善建议</p>
+        </div>
+
+
+        <!-- 设备连接状态 -->
+        <div class="analysis-section">
+            <div class="section-title">
+                <i class="fas fa-server"></i>
+                设备连接状态
+            </div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-indicator status-online"></div>
+                    <div>ESP-01S 模块</div>
+                    <div style="font-size: 0.8rem; opacity: 0.7;">在线</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-online"></div>
+                    <div>水质传感器</div>
+                    <div style="font-size: 0.8rem; opacity: 0.7;">连接成功</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-online"></div>
+                    <div>AI分析服务</div>
+                    <div style="font-size: 0.8rem; opacity: 0.7;">运行中</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-online"></div>
+                    <div>数据库服务</div>
+                    <div style="font-size: 0.8rem; opacity: 0.7;">在线</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据输入表单 -->
+        <div class="analysis-section">
+            <div class="section-title">
+                <i class="fas fa-flask"></i>
+                水质数据输入
+            </div>
+            
+            <form id="analysisForm">
+                <div class="data-input-form">
+                    <div class="form-group">
+                        <label class="form-label">TDS (总溶解固体)</label>
+                        <input type="number" class="form-input" id="tds" placeholder="输入TDS值 (ppm)" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">温度</label>
+                        <input type="number" class="form-input" id="temperature" placeholder="输入温度 (°C)" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">pH值</label>
+                        <input type="number" class="form-input" id="ph" placeholder="输入pH值" step="0.1" min="0" max="14">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">浊度</label>
+                        <input type="number" class="form-input" id="turbidity" placeholder="输入浊度 (NTU)" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">铅 (Pb2+)</label>
+                        <input type="number" class="form-input" id="pb" placeholder="输入铅浓度 (mg/L)" step="0.001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">镉 (Cd2+)</label>
+                        <input type="number" class="form-input" id="cd" placeholder="输入镉浓度 (mg/L)" step="0.001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">汞 (Hg)</label>
+                        <input type="number" class="form-input" id="hg" placeholder="输入汞浓度 (mg/L)" step="0.001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">铬 (Cr6+)</label>
+                        <input type="number" class="form-input" id="cr6" placeholder="输入六价铬浓度 (mg/L)" step="0.001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">铜 (Cu2+)</label>
+                        <input type="number" class="form-input" id="cu" placeholder="输入铜浓度 (mg/L)" step="0.001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">镍 (Ni2+)</label>
+                        <input type="number" class="form-input" id="ni" placeholder="输入镍浓度 (mg/L)" step="0.001">
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="analyze-button" id="analyzeBtn">
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                        <i class="fas fa-brain" id="analyzeIcon"></i>
+                        <span id="analyzeText">开始AI分析</span>
+                    </button>
+                    <button type="button" class="sample-data-button" onclick="fillSampleData()">
+                        <i class="fas fa-flask"></i>
+                        填入示例数据
+                    </button>
+                </div>
+            </form>
+            
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- AI分析结果 -->
+        <div class="analysis-result" id="analysisResult">
+            <div class="result-header">
+                <h3>
+                    <i class="fas fa-chart-line"></i>
+                    AI分析结果
+                </h3>
+                <div class="risk-level" id="riskLevel">--</div>
+            </div>
+            
+            <div class="result-content">
+                <div class="result-section">
+                    <h4>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        风险评估
+                    </h4>
+                    <p id="riskAssessment">--</p>
+                </div>
+                
+                <div class="result-section">
+                    <h4>
+                        <i class="fas fa-microscope"></i>
+                        数据分析
+                    </h4>
+                    <p id="dataAnalysis">--</p>
+                </div>
+                
+                <div class="result-section">
+                    <h4>
+                        <i class="fas fa-lightbulb"></i>
+                        改善建议
+                    </h4>
+                    <div class="recommendations">
+                        <h5>
+                            <i class="fas fa-tools"></i>
+                            具体建议
+                        </h5>
+                        <ul id="recommendationsList">
+                            <!-- 建议将通过JavaScript动态生成 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/api_page" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        返回设备管理
+    </a>
+
+    <script>
+        // 示例数据
+        const sampleData = {
+            tds: 350,
+            temperature: 25.5,
+            ph: 7.2,
+            turbidity: 0.8,
+            pb: 0.015,
+            cd: 0.005,
+            hg: 0.002,
+            cr6: 0.08,
+            cu: 0.12,
+            ni: 0.05
+        };
+
+        // 填入示例数据
+        function fillSampleData() {
+            Object.keys(sampleData).forEach(key => {
+                const input = document.getElementById(key);
+                if (input) {
+                    input.value = sampleData[key];
+                }
+            });
+        }
+
+        // 表单提交处理
+        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const analyzeIcon = document.getElementById('analyzeIcon');
+            const analyzeText = document.getElementById('analyzeText');
+            const errorMessage = document.getElementById('errorMessage');
+            const analysisResult = document.getElementById('analysisResult');
+            
+            // 显示加载状态
+            analyzeBtn.disabled = true;
+            loadingSpinner.style.display = 'block';
+            analyzeIcon.style.display = 'none';
+            analyzeText.textContent = 'AI分析中...';
+            errorMessage.style.display = 'none';
+            analysisResult.style.display = 'none';
+            
+            // 收集表单数据
+            const formData = new FormData(this);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = parseFloat(value) || 0;
+            }
+            
+            // 添加手动输入的数据
+            ['tds', 'temperature', 'ph', 'turbidity', 'pb', 'cd', 'hg', 'cr6', 'cu', 'ni'].forEach(key => {
+                const input = document.getElementById(key);
+                if (input && input.value) {
+                    data[key] = parseFloat(input.value);
+                }
+            });
+            
+            try {
+                // 调用AI分析API
+                const response = await fetch('/api/ai_analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('分析请求失败');
+                }
+                
+                const result = await response.json();
+                
+                // 添加调试信息
+                console.log('API响应:', result);
+                console.log('风险等级:', result.risk_level);
+                console.log('风险评估:', result.risk_assessment);
+                console.log('数据分析:', result.data_analysis);
+                console.log('建议:', result.recommendations);
+                
+                // 显示分析结果
+                displayAnalysisResult(result);
+                
+            } catch (error) {
+                console.error('分析错误:', error);
+                errorMessage.textContent = '分析失败: ' + error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                // 恢复按钮状态
+                analyzeBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+                analyzeIcon.style.display = 'block';
+                analyzeText.textContent = '开始AI分析';
+            }
+        });
+        
+        // 显示分析结果
+        function displayAnalysisResult(result) {
+            const analysisResult = document.getElementById('analysisResult');
+            const riskLevel = document.getElementById('riskLevel');
+            const riskAssessment = document.getElementById('riskAssessment');
+            const dataAnalysis = document.getElementById('dataAnalysis');
+            const recommendationsList = document.getElementById('recommendationsList');
+            
+            // 设置风险等级
+            riskLevel.textContent = result.risk_level || '未知';
+            riskLevel.className = 'risk-level';
+            
+            if (result.risk_level === '低风险') {
+                riskLevel.classList.add('risk-low');
+            } else if (result.risk_level === '中风险') {
+                riskLevel.classList.add('risk-medium');
+            } else if (result.risk_level === '高风险') {
+                riskLevel.classList.add('risk-high');
+            }
+            
+            // 设置分析内容
+            riskAssessment.textContent = result.risk_assessment || '暂无风险评估';
+            dataAnalysis.textContent = result.data_analysis || '暂无数据分析';
+            
+            // 设置建议列表
+            recommendationsList.innerHTML = '';
+            if (result.recommendations && result.recommendations.length > 0) {
+                result.recommendations.forEach(recommendation => {
+                    const li = document.createElement('li');
+                    li.textContent = recommendation;
+                    recommendationsList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = '暂无具体建议';
+                recommendationsList.appendChild(li);
+            }
+            
+            // 添加AI来源提示
+            const aiSource = result.ai_source || '未知';
+            console.log(`AI分析来源: ${aiSource}`);
+            
+            // 显示结果
+            analysisResult.style.display = 'block';
+        }
+        
+    </script>
+</body>
+</html>
