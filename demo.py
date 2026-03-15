@@ -1,9 +1,7 @@
 import pandas as pd
 
-# 读取英文 CSV 文件
 df = pd.read_csv('static/china_water_pollution_data.csv')
 
-# 字段翻译字典
 columns_map = {
     'Province': '省份',
     'City': '城市',
@@ -32,10 +30,8 @@ columns_map = {
     'Remarks': '备注'
 }
 
-# 修改字段名
 df.rename(columns=columns_map, inplace=True)
 
-# 保存为中文 CSV
 df.to_csv('water_quality.csv', index=False, encoding='utf-8-sig')
 
 print("✅ 字段已翻译，文件已保存为 water_quality_中文.csv")

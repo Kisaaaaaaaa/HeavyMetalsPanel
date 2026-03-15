@@ -228,12 +228,10 @@ hr {
 </div>
 <a href="/dashboard" class="return-dashboard-btn">返回看板</a>
 <script>
-    // 初始化地图
     var map = new AMap.Map('map', {
         zoom: 5,
-        center: [105.8345, 34.3416] // 中国中心坐标
+        center: [105.8345, 34.3416]
     });
-    // 添加批量绿色标记（仅中国范围）
     var customPoints = [
         {city: '宁波', lat: 25.523836, lng: 122.622036},
         {city: '绵阳', lat: 32.243099, lng: 112.888760},
@@ -268,13 +266,12 @@ hr {
             position: [p.lng, p.lat],
             title: p.city,
             icon: new AMap.Icon({
-                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png', // 绿色图标
+                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
                 size: [32, 32]
             })
         });
         marker.setMap(map);
     });
-    // 添加批量红色标记（仅中国范围）
     var redPoints = [
         {city: '青岛', lat: 23.724517, lng: 119.831871},
         {city: '成都', lat: 43.990480, lng: 115.619914},
@@ -304,7 +301,7 @@ hr {
             position: [p.lng, p.lat],
             title: p.city,
             icon: new AMap.Icon({
-                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png', // 红色图标
+                image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png',
                 size: [32, 32]
             })
         });
@@ -313,8 +310,7 @@ hr {
     var points = JSON.parse('{{ (map_data or []) | tojson | safe }}');
     var metal_stats = JSON.parse('{{ (metal_stats or []) | tojson | safe }}');
     var exceedStats = JSON.parse('{{ (exceed_stats or {}) | tojson | safe }}');
-    
-    // 确保变量是有效的
+
     if (typeof points !== 'object' || !Array.isArray(points)) {
         points = [];
     }
@@ -327,7 +323,6 @@ hr {
     console.log('points:', points);
     console.log('metal_stats:', metal_stats);
     console.log('exceed_stats:', exceedStats);
-    // 过滤无效经纬度并生成 marker
     var markers = [];
     if (points && Array.isArray(points)) {
         markers = points.map(function(point) {
@@ -339,8 +334,8 @@ hr {
                     position: [point.longitude, point.latitude],
                     title: "检测点: " + (point.upload_time || ''),
                     icon: point.is_exceed
-                        ? new AMap.Icon({ image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png', size: [32, 32] }) // 超标红色
-                        : new AMap.Icon({ image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png', size: [32, 32] }) // 正常绿色
+                        ? new AMap.Icon({ image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png', size: [32, 32] })
+                        : new AMap.Icon({ image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png', size: [32, 32] })
                 });
                 var info = '<b>' + (point.city || '') + '</b><br>时间: ' + (point.upload_time || '') +
                     (point.is_exceed ? '<br><span style="color:red;">超标: ' + (point.exceed_items && point.exceed_items.length ? point.exceed_items.join(', ') : '是') + '</span>' : '<br>全部正常');
@@ -355,13 +350,11 @@ hr {
             }
         }).filter(Boolean);
     }
-    // 正确加载 MarkerClusterer 插件
     AMap.plugin('AMap.MarkerClusterer', function() {
         var cluster = new AMap.MarkerClusterer(map, markers, {
-            gridSize: 80 // 可根据需要调整聚合粒度
+            gridSize: 80
         });
     });
-    // 饼图
     try {
         var chartDom = document.getElementById('charts');
         if (chartDom) {
@@ -388,8 +381,7 @@ hr {
     } catch (e) {
         console.error('饼图渲染失败:', e);
     }
-    
-    // 柱状图
+
     try {
         var metals = exceedStats ? Object.keys(exceedStats) : [];
         var values = metals.map(function(m){ return exceedStats[m] || 0; });

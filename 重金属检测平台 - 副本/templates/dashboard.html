@@ -1,4 +1,3 @@
-        // 折线图：数据记录（示例）
         var lineChart = echarts.init(document.getElementById('data-line'));
         lineChart.setOption({
             title: { text: '数据记录（2025年7月）', left: 'center' },
@@ -15,8 +14,8 @@
         radarChart.setOption({
             title: { text: '水质指标分布', left: 'center' },
             radar: {
-                center: ['50%', '60%'], // 下移雷达图
-                radius: '70%',          // 适当缩小
+                center: ['50%', '60%'],
+                radius: '70%',
                 indicator: [
                     { name: 'COD', max: 1 },
                     { name: 'Turbidity', max: 1 },
@@ -39,4 +38,4 @@
                     { value: [0.7, 0.5, 0.6, 0.4, 0.3, 0.8, 0.2, 0.4, 0.3], name: '水质指标' }
                 ]
             }]
-        }); 
+        });

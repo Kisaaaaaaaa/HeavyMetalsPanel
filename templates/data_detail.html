@@ -245,7 +245,7 @@
                     </tr>
                     </thead>
                     <tbody id="data-table-body">
-                    <!-- 数据行由JS渲染 -->
+
                     </tbody>
                 </table>
                 <div id="pagination" class="pagination"></div>
@@ -261,8 +261,7 @@
         <a href="/analyze" class="detail-back">返回分析</a>
     </div>
     <script>
-        // 统计超标次数
-        var analysis = {{ data.analysis | tojson | safe }};
+        var analysis = JSON.parse('{{ (data.analysis or []) | tojson | safe }}');
         var exceedCount = {};
         var exceedPie = {};
         analysis.forEach(function(row) {
@@ -277,7 +276,6 @@
         var values = metals.map(function(m){ return exceedCount[m]; });
         var pieData = Object.keys(exceedPie).map(function(m){ return {name: m, value: exceedPie[m]}; });
 
-        // 柱状图
         var exceedChart = echarts.init(document.getElementById('exceed_chart'));
         var exceedOption = {
             xAxis: { type: 'category', data: metals, axisLabel: { color: '#7dd3fc' } },
@@ -292,7 +290,6 @@
         };
         exceedChart.setOption(exceedOption);
 
-        // 饼图
         var pieChart = echarts.init(document.getElementById('pie_chart'));
         var pieOption = {
             series: [{
@@ -308,7 +305,6 @@
         };
         pieChart.setOption(pieOption);
         function exportReport() {
-            // 获取所有rows数据（所有分页）
             var headers = [];
             document.querySelectorAll('#data-table thead th').forEach(function(th) {
                 headers.push(th.textContent.trim());
@@ -323,7 +319,6 @@
                     r.city || '-'
                 ]);
             });
-            // 转为CSV
             var csv = allRows.map(function(r) {
                 return r.map(function(cell) {
                     if (cell.indexOf && (cell.indexOf(',') !== -1 || cell.indexOf('"') !== -1)) {
@@ -332,7 +327,6 @@
                     return cell;
                 }).join(',');
             }).join('\r\n');
-            // 生成下载
             var blob = new Blob([csv], {type: 'text/csv'});
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
@@ -346,8 +340,7 @@
         function applyEdit() { alert('申请修改功能待实现'); }
         function shareData() { alert('分享功能待实现'); }
 
-        // 分页渲染检测数据明细
-        var analysis = {{ data.analysis | tojson | safe }};
+        var analysis = JSON.parse('{{ (data.analysis or []) | tojson | safe }}');
         var rows = [];
         analysis.forEach(function(row) {
             for (var metal in row) {
@@ -379,7 +372,6 @@
             var pagination = document.getElementById('pagination');
             pagination.innerHTML = '';
             if (totalPages <= 1) return;
-            // 上一页按钮
             var prevBtn = document.createElement('button');
             prevBtn.className = 'pagination-btn';
             prevBtn.textContent = '上一页';
@@ -392,12 +384,10 @@
                 }
             };
             pagination.appendChild(prevBtn);
-            // 页码信息
             var info = document.createElement('span');
             info.className = 'pagination-info';
             info.innerHTML = '第 <input type="number" min="1" max="' + totalPages + '" value="' + currentPage + '" class="pagination-input" id="pageInput"> 页 / 共 ' + totalPages + ' 页';
             pagination.appendChild(info);
-            // 跳转输入
             setTimeout(function() {
                 var input = document.getElementById('pageInput');
                 input.onkeydown = function(e) {
@@ -423,7 +413,6 @@
                     }
                 };
             }, 0);
-            // 下一页按钮
             var nextBtn = document.createElement('button');
             nextBtn.className = 'pagination-btn';
             nextBtn.textContent = '下一页';

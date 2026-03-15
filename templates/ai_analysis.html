@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI智能分析 - 多参数水质实时监测与智能化分析系统</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Font Awesome 图标 -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
@@ -339,15 +339,15 @@
             .main-container {
                 padding: 1rem;
             }
-            
+
             .data-input-form {
                 grid-template-columns: 1fr;
             }
-            
+
             .header h1 {
                 font-size: 1.5rem;
             }
-            
+
             .back-link {
                 position: static;
                 display: block;
@@ -374,8 +374,6 @@
             <p>通过大语言模型分析水质数据，提供专业的风险评估和改善建议</p>
         </div>
 
-
-        <!-- 设备连接状态 -->
         <div class="analysis-section">
             <div class="section-title">
                 <i class="fas fa-server"></i>
@@ -405,66 +403,65 @@
             </div>
         </div>
 
-        <!-- 数据输入表单 -->
         <div class="analysis-section">
             <div class="section-title">
                 <i class="fas fa-flask"></i>
                 水质数据输入
             </div>
-            
+
             <form id="analysisForm">
                 <div class="data-input-form">
                     <div class="form-group">
                         <label class="form-label">TDS (总溶解固体)</label>
                         <input type="number" class="form-input" id="tds" placeholder="输入TDS值 (ppm)" step="0.1">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">温度</label>
                         <input type="number" class="form-input" id="temperature" placeholder="输入温度 (°C)" step="0.1">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">pH值</label>
                         <input type="number" class="form-input" id="ph" placeholder="输入pH值" step="0.1" min="0" max="14">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">浊度</label>
                         <input type="number" class="form-input" id="turbidity" placeholder="输入浊度 (NTU)" step="0.1">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">铅 (Pb2+)</label>
                         <input type="number" class="form-input" id="pb" placeholder="输入铅浓度 (mg/L)" step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">镉 (Cd2+)</label>
                         <input type="number" class="form-input" id="cd" placeholder="输入镉浓度 (mg/L)" step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">汞 (Hg)</label>
                         <input type="number" class="form-input" id="hg" placeholder="输入汞浓度 (mg/L)" step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">铬 (Cr6+)</label>
                         <input type="number" class="form-input" id="cr6" placeholder="输入六价铬浓度 (mg/L)" step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">铜 (Cu2+)</label>
                         <input type="number" class="form-input" id="cu" placeholder="输入铜浓度 (mg/L)" step="0.001">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label">镍 (Ni2+)</label>
                         <input type="number" class="form-input" id="ni" placeholder="输入镍浓度 (mg/L)" step="0.001">
                     </div>
                 </div>
-                
+
                 <div style="text-align: center;">
                     <button type="submit" class="analyze-button" id="analyzeBtn">
                         <div class="loading-spinner" id="loadingSpinner"></div>
@@ -477,11 +474,10 @@
                     </button>
                 </div>
             </form>
-            
+
             <div class="error-message" id="errorMessage"></div>
         </div>
 
-        <!-- AI分析结果 -->
         <div class="analysis-result" id="analysisResult">
             <div class="result-header">
                 <h3>
@@ -490,7 +486,7 @@
                 </h3>
                 <div class="risk-level" id="riskLevel">--</div>
             </div>
-            
+
             <div class="result-content">
                 <div class="result-section">
                     <h4>
@@ -499,7 +495,7 @@
                     </h4>
                     <p id="riskAssessment">--</p>
                 </div>
-                
+
                 <div class="result-section">
                     <h4>
                         <i class="fas fa-microscope"></i>
@@ -507,7 +503,7 @@
                     </h4>
                     <p id="dataAnalysis">--</p>
                 </div>
-                
+
                 <div class="result-section">
                     <h4>
                         <i class="fas fa-lightbulb"></i>
@@ -519,7 +515,7 @@
                             具体建议
                         </h5>
                         <ul id="recommendationsList">
-                            <!-- 建议将通过JavaScript动态生成 -->
+
                         </ul>
                     </div>
                 </div>
@@ -533,7 +529,6 @@
     </a>
 
     <script>
-        // 示例数据
         const sampleData = {
             tds: 350,
             temperature: 25.5,
@@ -547,7 +542,6 @@
             ni: 0.05
         };
 
-        // 填入示例数据
         function fillSampleData() {
             Object.keys(sampleData).forEach(key => {
                 const input = document.getElementById(key);
@@ -557,42 +551,45 @@
             });
         }
 
-        // 表单提交处理
         document.getElementById('analysisForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const analyzeBtn = document.getElementById('analyzeBtn');
             const loadingSpinner = document.getElementById('loadingSpinner');
             const analyzeIcon = document.getElementById('analyzeIcon');
             const analyzeText = document.getElementById('analyzeText');
             const errorMessage = document.getElementById('errorMessage');
             const analysisResult = document.getElementById('analysisResult');
-            
-            // 显示加载状态
+
             analyzeBtn.disabled = true;
             loadingSpinner.style.display = 'block';
             analyzeIcon.style.display = 'none';
             analyzeText.textContent = 'AI分析中...';
             errorMessage.style.display = 'none';
             analysisResult.style.display = 'none';
-            
-            // 收集表单数据
+
             const formData = new FormData(this);
             const data = {};
             for (let [key, value] of formData.entries()) {
                 data[key] = parseFloat(value) || 0;
             }
-            
-            // 添加手动输入的数据
+
             ['tds', 'temperature', 'ph', 'turbidity', 'pb', 'cd', 'hg', 'cr6', 'cu', 'ni'].forEach(key => {
                 const input = document.getElementById(key);
                 if (input && input.value) {
                     data[key] = parseFloat(input.value);
                 }
             });
-            
+
             try {
-                // 调用AI分析API
+                // 确保包含所有必需字段
+                const requiredFields = ['tds', 'temperature', 'ph', 'turbidity'];
+                requiredFields.forEach(field => {
+                    if (data[field] === undefined || data[field] === null) {
+                        data[field] = 0;
+                    }
+                });
+                
                 const response = await fetch('/api/ai_analysis', {
                     method: 'POST',
                     headers: {
@@ -600,48 +597,43 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('分析请求失败');
                 }
-                
+
                 const result = await response.json();
-                
-                // 添加调试信息
+
                 console.log('API响应:', result);
                 console.log('风险等级:', result.risk_level);
                 console.log('风险评估:', result.risk_assessment);
                 console.log('数据分析:', result.data_analysis);
                 console.log('建议:', result.recommendations);
-                
-                // 显示分析结果
+
                 displayAnalysisResult(result);
-                
+
             } catch (error) {
                 console.error('分析错误:', error);
                 errorMessage.textContent = '分析失败: ' + error.message;
                 errorMessage.style.display = 'block';
             } finally {
-                // 恢复按钮状态
                 analyzeBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
                 analyzeIcon.style.display = 'block';
                 analyzeText.textContent = '开始AI分析';
             }
         });
-        
-        // 显示分析结果
+
         function displayAnalysisResult(result) {
             const analysisResult = document.getElementById('analysisResult');
             const riskLevel = document.getElementById('riskLevel');
             const riskAssessment = document.getElementById('riskAssessment');
             const dataAnalysis = document.getElementById('dataAnalysis');
             const recommendationsList = document.getElementById('recommendationsList');
-            
-            // 设置风险等级
+
             riskLevel.textContent = result.risk_level || '未知';
             riskLevel.className = 'risk-level';
-            
+
             if (result.risk_level === '低风险') {
                 riskLevel.classList.add('risk-low');
             } else if (result.risk_level === '中风险') {
@@ -649,12 +641,10 @@
             } else if (result.risk_level === '高风险') {
                 riskLevel.classList.add('risk-high');
             }
-            
-            // 设置分析内容
+
             riskAssessment.textContent = result.risk_assessment || '暂无风险评估';
             dataAnalysis.textContent = result.data_analysis || '暂无数据分析';
-            
-            // 设置建议列表
+
             recommendationsList.innerHTML = '';
             if (result.recommendations && result.recommendations.length > 0) {
                 result.recommendations.forEach(recommendation => {
@@ -667,15 +657,13 @@
                 li.textContent = '暂无具体建议';
                 recommendationsList.appendChild(li);
             }
-            
-            // 添加AI来源提示
+
             const aiSource = result.ai_source || '未知';
             console.log(`AI分析来源: ${aiSource}`);
-            
-            // 显示结果
+
             analysisResult.style.display = 'block';
         }
-        
+
     </script>
 </body>
 </html>

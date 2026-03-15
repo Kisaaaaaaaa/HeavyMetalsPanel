@@ -299,7 +299,6 @@
             opacity: 0.5;
         }
 
-        /* 模态框样式 */
         .modal {
             position: fixed;
             top: 0;
@@ -536,11 +535,10 @@
                 监测数据
             </h2>
             <div id="dataContainer">
-                <!-- 初始显示所有参数的数据卡片，但显示暂无数据 -->
+
             </div>
         </div>
 
-        <!-- 数据保存对话框 -->
         <div id="saveModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -622,9 +620,8 @@
         const confirmSave = document.getElementById('confirmSave');
         const selectFromMap = document.getElementById('selectFromMap');
 
-        let currentData = null; // 存储当前显示的数据
+        let currentData = null;
 
-        // 初始化显示所有参数，但显示暂无数据
         function initializeDataDisplay() {
             const groupedParams = parameters.reduce((acc, param) => {
                 if (!acc[param.category]) acc[param.category] = [];
@@ -642,7 +639,7 @@
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
                 `;
-                
+
                 params.forEach(param => {
                     html += `
                         <div class="data-card">
@@ -659,10 +656,10 @@
                         </div>
                     `;
                 });
-                
+
                 html += '</div></div>';
             }
-            
+
             container.innerHTML = html;
         }
 
@@ -675,13 +672,13 @@
             if (value === null || value === undefined || value === "-") {
                 return "status-unknown";
             }
-            
+
             if (threshold === null) return "status-normal";
-            
+
             if (Array.isArray(threshold)) {
                 return (value >= threshold[0] && value <= threshold[1]) ? "status-normal" : "status-exceed";
             }
-            
+
             return value <= threshold ? "status-normal" : "status-exceed";
         }
 
@@ -689,19 +686,19 @@
             if (value === null || value === undefined || value === "-") {
                 return "无数据";
             }
-            
+
             if (threshold === null) return "正常";
-            
+
             if (Array.isArray(threshold)) {
                 return (value >= threshold[0] && value <= threshold[1]) ? "正常" : "异常";
             }
-            
+
             return value <= threshold ? "正常" : "超标";
         }
 
         function renderData(data) {
-            currentData = data; // 保存当前数据
-            
+            currentData = data;
+
             if (!data || Object.keys(data).length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
@@ -713,7 +710,6 @@
                 return;
             }
 
-            // 显示保存按钮
             saveBtn.style.display = 'flex';
 
             const groupedParams = parameters.reduce((acc, param) => {
@@ -732,13 +728,13 @@
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
                 `;
-                
+
                 params.forEach(param => {
                     const value = data[param.name];
                     const hasData = value !== null && value !== undefined && value !== "-";
                     const statusClass = getStatusClass(value, param.threshold);
                     const statusText = getStatusText(value, param.threshold);
-                    
+
                     html += `
                         <div class="data-card">
                             <div class="card-header">
@@ -754,43 +750,40 @@
                         </div>
                     `;
                 });
-                
+
                 html += '</div></div>';
             }
-            
+
             container.innerHTML = html;
         }
 
-        // 生成模拟数据
         function generateMockData() {
             const mockData = {};
-            
-            // 重金属数据（模拟真实检测值）
+
             const heavyMetals = {
-                "Pb": (Math.random() * 0.02).toFixed(4), // 0-0.02 mg/L
-                "Cd": (Math.random() * 0.01).toFixed(4), // 0-0.01 mg/L
-                "Hg": (Math.random() * 0.002).toFixed(4), // 0-0.002 mg/L
-                "Cu": (Math.random() * 2).toFixed(2), // 0-2 mg/L
-                "Cr": (Math.random() * 0.1).toFixed(3), // 0-0.1 mg/L
-                "Ni": (Math.random() * 0.15).toFixed(3), // 0-0.15 mg/L
-                "As": (Math.random() * 0.02).toFixed(4), // 0-0.02 mg/L
-                "Mn": (Math.random() * 0.2).toFixed(3), // 0-0.2 mg/L
-                "Fe": (Math.random() * 0.6).toFixed(2), // 0-0.6 mg/L
-                "Zn": (Math.random() * 2).toFixed(2), // 0-2 mg/L
-                "Se": (Math.random() * 0.02).toFixed(4), // 0-0.02 mg/L
-                "Ba": (Math.random() * 1.4).toFixed(2), // 0-1.4 mg/L
-                "Al": (Math.random() * 0.4).toFixed(2), // 0-0.4 mg/L
-                "Ag": (Math.random() * 0.1).toFixed(3) // 0-0.1 mg/L
+                "Pb": (Math.random() * 0.02).toFixed(4),
+                "Cd": (Math.random() * 0.01).toFixed(4),
+                "Hg": (Math.random() * 0.002).toFixed(4),
+                "Cu": (Math.random() * 2).toFixed(2),
+                "Cr": (Math.random() * 0.1).toFixed(3),
+                "Ni": (Math.random() * 0.15).toFixed(3),
+                "As": (Math.random() * 0.02).toFixed(4),
+                "Mn": (Math.random() * 0.2).toFixed(3),
+                "Fe": (Math.random() * 0.6).toFixed(2),
+                "Zn": (Math.random() * 2).toFixed(2),
+                "Se": (Math.random() * 0.02).toFixed(4),
+                "Ba": (Math.random() * 1.4).toFixed(2),
+                "Al": (Math.random() * 0.4).toFixed(2),
+                "Ag": (Math.random() * 0.1).toFixed(3)
             };
-            
-            // 基础参数数据
+
             const basicParams = {
-                "TDS": Math.floor(Math.random() * 2000 + 100), // 100-2100 ppm
-                "Temperature": (Math.random() * 30 + 10).toFixed(1), // 10-40°C
-                "pH": (Math.random() * 3 + 6).toFixed(1), // 6.0-9.0
-                "Turbidity": (Math.random() * 2).toFixed(2) // 0-2 NTU
+                "TDS": Math.floor(Math.random() * 2000 + 100),
+                "Temperature": (Math.random() * 30 + 10).toFixed(1),
+                "pH": (Math.random() * 3 + 6).toFixed(1),
+                "Turbidity": (Math.random() * 2).toFixed(2)
             };
-            
+
             return { ...heavyMetals, ...basicParams };
         }
 
@@ -799,30 +792,25 @@
             startBtn.innerHTML = '<div class="loading-spinner"></div> 检测中...';
             updateStatus('loading', '正在检测中...');
 
-            // 模拟加载时间 - 等待5秒
             setTimeout(() => {
-                // 只显示铜的数据，其他参数保持无数据状态
                 const fixedData = {
-                    "Cu": 15   // 铜：15mg/L
+                    "Cu": 15
                 };
-                
+
                 renderData(fixedData);
                 updateStatus('success', '检测完成');
-                
+
                 startBtn.disabled = false;
                 startBtn.innerHTML = '<i class="fas fa-play"></i> 开始检测';
-            }, 5000); // 5秒加载时间
+            }, 5000);
         });
 
-
-        // 保存按钮事件
         saveBtn.addEventListener('click', () => {
             if (currentData) {
                 saveModal.style.display = 'flex';
             }
         });
 
-        // 模态框关闭事件
         modalClose.addEventListener('click', () => {
             saveModal.style.display = 'none';
         });
@@ -831,37 +819,30 @@
             saveModal.style.display = 'none';
         });
 
-        // 点击模态框背景关闭
         saveModal.addEventListener('click', (e) => {
             if (e.target === saveModal) {
                 saveModal.style.display = 'none';
             }
         });
 
-        // 从地图选择位置
         selectFromMap.addEventListener('click', () => {
-            // 保存当前数据到 sessionStorage，以便从地图页面返回时使用
             sessionStorage.setItem('deviceDataToSave', JSON.stringify(currentData));
             sessionStorage.setItem('returnToDevice', 'true');
-            
-            // 跳转到数据上传页面
+
             window.open('/upload', '_blank');
         });
 
-        // 确认保存事件
         confirmSave.addEventListener('click', async () => {
             const latitude = document.getElementById('latitude').value;
             const longitude = document.getElementById('longitude').value;
             const city = document.getElementById('city').value;
             const locationName = document.getElementById('locationName').value;
 
-            // 验证必填字段
             if (!latitude || !longitude || !city) {
                 alert('请填写纬度、经度和城市名称');
                 return;
             }
 
-            // 验证坐标范围
             if (latitude < -90 || latitude > 90) {
                 alert('纬度范围应在 -90 到 90 之间');
                 return;
@@ -894,7 +875,6 @@
                 if (result.ok) {
                     updateStatus('success', '数据保存成功');
                     saveModal.style.display = 'none';
-                    // 清空表单
                     document.getElementById('latitude').value = '';
                     document.getElementById('longitude').value = '';
                     document.getElementById('city').value = '';
@@ -910,7 +890,6 @@
             }
         });
 
-        // 检查是否从地图页面返回
         window.addEventListener('storage', function(e) {
             if (e.key === 'locationSelected' && e.newValue) {
                 const locationData = JSON.parse(e.newValue);
@@ -918,13 +897,11 @@
                 document.getElementById('longitude').value = locationData.longitude;
                 document.getElementById('city').value = locationData.city;
                 document.getElementById('locationName').value = locationData.locationName || '';
-                
-                // 清理存储
+
                 localStorage.removeItem('locationSelected');
             }
         });
 
-        // 页面加载时检查是否有位置数据
         window.addEventListener('load', function() {
             const locationData = localStorage.getItem('locationSelected');
             if (locationData) {
@@ -933,16 +910,13 @@
                 document.getElementById('longitude').value = data.longitude;
                 document.getElementById('city').value = data.city;
                 document.getElementById('locationName').value = data.locationName || '';
-                
-                // 清理存储
+
                 localStorage.removeItem('locationSelected');
-                
-                // 显示成功消息
+
                 updateStatus('success', '位置信息已自动填充');
             }
         });
 
-        // 定期检查是否有新的位置数据（用于处理从地图页面返回的情况）
         setInterval(function() {
             const locationData = localStorage.getItem('locationSelected');
             if (locationData) {
@@ -951,19 +925,15 @@
                 document.getElementById('longitude').value = data.longitude;
                 document.getElementById('city').value = data.city;
                 document.getElementById('locationName').value = data.locationName || '';
-                
-                // 清理存储
+
                 localStorage.removeItem('locationSelected');
-                
-                // 显示成功消息
+
                 updateStatus('success', '位置信息已自动填充');
             }
-        }, 1000); // 每秒检查一次
+        }, 1000);
 
-        // 初始化显示
         initializeDataDisplay();
-        
-        // 初始状态
+
         updateStatus('', '准备就绪');
     </script>
 </body>

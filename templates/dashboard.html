@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>多参数水质实时监测与智能化分析系统看板</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- ECharts -->
+
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-    <script src="{{ url_for('static', filename='js/china.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/china.js') }}?v={{ range(1000000) | random }}"></script>
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- 顶部：标题 + 用户信息 -->
+
         <div class="header">
             <h1>多参数水质实时监测与智能化分析系统</h1>
             <div class="user-info">
@@ -21,20 +21,18 @@
             </div>
         </div>
 
-        <!-- 核心布局：左侧 + 中间 + 右侧 -->
         <div class="layout">
-            <!-- 左侧：污染类型饼图 + 接入场景 -->
+
             <div class="left-panel">
                 <div id="metal-radar" style="width:100%;height:100%;margin:0;padding:0;"></div>
                 <div id="scene-funnel" style="width:100%;height:100%;margin:0;padding:0;"></div>
                 <div id="pollution-donut" style="width:100%;height:100%;margin:0;padding:0;"></div>
             </div>
 
-            <!-- 中间：中国地图 + 监控列表 -->
             <div class="middle-panel">
-                <!-- 中国地图 -->
+
                 <div class="card" id="china-map" style="height: 500px;"></div>
-                <!-- 监控列表 -->
+
                 <div class="card">
                     <h3>监控列表</h3>
                     <table>
@@ -44,7 +42,6 @@
                 </div>
             </div>
 
-            <!-- 右侧：预警信息 + 报警记录 + 数据记录 -->
             <div class="right-panel">
                 <div class="warning-panel">
                     <h3>预警信息</h3>
@@ -70,26 +67,22 @@
             </div>
         </div>
     </div>
-    <!-- 新增底部分析图 -->
+
     <div class="bottom-panel">
-        <!-- 折线图 -->
+
         <div class="card" id="data-line-bottom" style="height: 300px;"></div>
-        <!-- 散点图 -->
+
         <div class="card" id="scatter-plot" style="height: 300px;"></div>
     </div>
 
-    <!-- ECharts 初始化 -->
     <script>
-        // 解析后端传来的json数据
         var sensorData = JSON.parse('{{ sensor_data|safe }}');
         var pollution = JSON.parse('{{ pollution|safe }}');
         var provinceExceedCount = JSON.parse('{{ province_exceed_count|safe }}');
-        // 省份超标数据转为ECharts格式
         var provinceMapData = Object.keys(provinceExceedCount).map(function(prov){
             return {name: prov, value: provinceExceedCount[prov]};
         });
         var maxExceed = Math.max.apply(null, provinceMapData.map(function(d){return d.value;}));
-        // 构造超标城市点数据
         var cityExceedMap = {};
         sensorData.forEach(function(item){
             if(item.city && item.cadmium > 0 && item.longitude && item.latitude) {
@@ -101,7 +94,6 @@
             }
         });
         var cityExceedPoints = Object.values(cityExceedMap).map(function(item){
-            // 颜色深度和点大小与超标数相关
             var val = item.count;
             var color = val > 10 ? '#b30000' : val > 5 ? '#e74c3c' : '#ff9999';
             var size = Math.min(20 + val * 5, 60);
@@ -113,8 +105,6 @@
                 label: { show: false }
             };
         });
-        // 监控列表渲染用sensorData
-        // ECharts数据
         var chinaMapData = sensorData.map(function(item){
             return {name: item.city, value: item.cadmium};
         });
@@ -122,7 +112,6 @@
             return {value: pollution.counts[i], name: t};
         });
 
-        // 雷达图：超标金属类型分布
         var radarChart = echarts.init(document.getElementById('metal-radar'));
         radarChart.setOption({
             title: {
@@ -137,8 +126,8 @@
                 }
             },
             radar: {
-                center: ['50%', '60%'], // 下移雷达图
-                radius: '70%',          // 适当缩小
+                center: ['50%', '60%'],
+                radius: '70%',
                 indicator: [
                     { name: 'COD', max: 1 },
                     { name: 'Turbidity', max: 1 },
@@ -163,7 +152,6 @@
             }]
         });
 
-        // 漏斗图：检测场景数据量
         var funnelChart = echarts.init(document.getElementById('scene-funnel'));
         funnelChart.setOption({
             title: {
@@ -183,7 +171,7 @@
                 top: 60,
                 bottom: 60,
                 width: '80%',
-                height: '70%',   // 新增，让图更高
+                height: '70%',
                 min: 0,
                 max: 100,
                 data: [
@@ -195,7 +183,6 @@
             }]
         });
 
-        // 折线图：数据记录
         var lineChart = echarts.init(document.getElementById('data-line-bottom'));
         lineChart.setOption({
             title: { text: '数据记录（2025年10月）', left: 'center' },
@@ -208,7 +195,6 @@
             }]
         });
 
-        // 散点图：检测点浓度分布
         var scatterChart = echarts.init(document.getElementById('scatter-plot'));
         scatterChart.setOption({
             title: { text: '检测点浓度分布', left: 'center' },
@@ -232,7 +218,6 @@
             }]
         });
 
-        // 污染种类环形图（大屏美化优化）
         var donutChart = echarts.init(document.getElementById('pollution-donut'));
         donutChart.setOption({
             title: {
@@ -286,7 +271,6 @@
             }]
         });
 
-        // 渲染监控列表（展示最近五条）
         var tableBody = document.getElementById('monitor-table-body');
         var latest = sensorData.slice(-5).reverse();
         tableBody.innerHTML = latest.map(function(item){
@@ -299,7 +283,6 @@
             return `<tr><td>${item.province || ''}/${item.city || ''}</td><td>${total}</td><td>${safe}</td></tr>`;
         }).join('');
 
-        // 中国地图：省份着色+城市红点标记（无geo，仅series）
         var mapChart = echarts.init(document.getElementById('china-map'));
         mapChart.setOption({
             title: { text: '全国各省金属超标情况', left: 'center', textStyle: { color: '#b7ffff', fontFamily: 'DIN Alternate, Microsoft YaHei, Arial, sans-serif' } },
@@ -343,7 +326,6 @@
             ]
         });
 
-        // 各省超标排行榜条形图
         var barTopProvinces = JSON.parse('{{ bar_top_provinces|tojson|safe }}');
         window.barData = barTopProvinces.map(function(item) {
             return {name: item[0], value: item[1]};
@@ -377,7 +359,6 @@
             });
         }
 
-        // 本月超标趋势折线图
         var exceedTrendChart = echarts.init(document.getElementById('exceed-trend'));
         exceedTrendChart.setOption({
             title: { text: '', left: 'center' },
