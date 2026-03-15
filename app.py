@@ -1212,173 +1212,82 @@ def ai_analysis():
 @app.route('/api/ai_analysis', methods=['POST'])
 def ai_water_analysis():
     try:
+        print("收到AI分析请求")
         data = request.get_json()
+        print(f"请求数据: {data}")
 
         required_fields = ['tds', 'temperature', 'ph', 'turbidity']
         for field in required_fields:
             if field not in data or data[field] is None:
+                print(f"缺少必要字段: {field}")
                 return jsonify({'error': f'缺少必要字段: {field}'}), 400
 
+        print("开始调用analyze_water_quality_with_ai函数")
         analysis_result = analyze_water_quality_with_ai(data)
+        print(f"分析结果: {analysis_result}")
 
         return jsonify(analysis_result)
 
     except Exception as e:
         print(f"AI分析错误: {str(e)}")
-        return jsonify({'error': 'AI分析失败', 'details': str(e)}), 500
+        import traceback
+        traceback.print_exc()
+        
+        # 检查是否是API密钥错误
+        if "invalid_iam_token" in str(e):
+            return jsonify({'error': 'AI分析失败', 'details': 'API密钥无效，请检查API密钥配置'}), 500
+        elif "401" in str(e):
+            return jsonify({'error': 'AI分析失败', 'details': 'API认证失败，请检查API密钥配置'}), 500
+        elif "429" in str(e):
+            return jsonify({'error': 'AI分析失败', 'details': 'API调用频率过高，请稍后重试'}), 500
+        elif "500" in str(e):
+            return jsonify({'error': 'AI分析失败', 'details': 'API服务器错误，请稍后重试'}), 500
+        else:
+            return jsonify({'error': 'AI分析失败', 'details': str(e)}), 500
 
 def analyze_water_quality_with_ai(data):
     """
-    使用百度千帆AI分析水质数据
+    使用DeepSeek AI分析水质数据
     """
 
+    # 直接写入到文件，确保日志能够被捕获
+    with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+        f.write(f"\n开始分析水质数据: {data}\n")
+    
     prompt = build_analysis_prompt(data)
+    
+    with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+        f.write(f"构建的提示词: {prompt[:100]}...\n")
 
     try:
-        print("正在调用百度千帆AI进行分析...")
+        with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+            f.write("正在调用DeepSeek AI进行分析...\n")
+        
         analysis_result = call_qianfan_api(prompt)
+        
+        with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+            f.write(f"API调用结果: {analysis_result}\n")
+        
         if analysis_result:
-            print("✅ 使用百度千帆大模型分析结果")
+            with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                f.write("✅ 使用DeepSeek大模型分析结果\n")
             return analysis_result
         else:
-            print("❌ 百度千帆API调用失败")
-            # 即使API调用失败，也返回一个基于用户输入数据的模拟AI分析结果
-            tds = data.get('tds', 0)
-            temperature = data.get('temperature', 0)
-            ph = data.get('ph', 0)
-            turbidity = data.get('turbidity', 0)
-            
-            # 基于数据生成风险等级
-            risk_level = '低风险'
-            if tds > 1000 or ph < 6 or ph > 8.5 or turbidity > 5:
-                risk_level = '高风险'
-            elif tds > 500 or ph < 6.5 or ph > 8 or turbidity > 2:
-                risk_level = '中风险'
-            
-            # 基于数据生成建议
-            recommendations = []
-            if risk_level == '低风险':
-                recommendations = [
-                    '水质状况良好，建议定期监测保持现状',
-                    '建议每季度进行一次全面水质检测',
-                    '保持当前的水质管理措施'
-                ]
-            elif risk_level == '中风险':
-                recommendations = [
-                    '水质存在轻度异常，建议加强监测频率',
-                    '建议每月进行一次水质检测',
-                    '检查水源是否受到污染',
-                    '考虑使用水质净化设备'
-                ]
-            else: # 高风险
-                recommendations = [
-                    '水质存在严重异常，建议立即采取措施',
-                    '停止使用该水源进行饮用或灌溉',
-                    '联系专业水质检测机构进行详细分析',
-                    '排查污染源并采取治理措施',
-                    '建议安装专业的水质净化系统'
-                ]
-            
-            # 根据具体指标异常添加针对性建议
-            if tds > 1000:
-                recommendations.append('TDS值过高，建议使用反渗透净水器')
-            elif tds > 500:
-                recommendations.append('TDS值偏高，建议使用活性炭过滤器')
-                
-            if ph < 6 or ph > 8.5:
-                recommendations.append('pH值异常，建议使用pH调节剂')
-            
-            if temperature > 30:
-                recommendations.append('水温过高，建议检查水源是否受到热污染')
-            
-            if turbidity > 5:
-                recommendations.append('浊度严重超标，建议使用沉淀池和过滤系统')
-            elif turbidity > 2:
-                recommendations.append('浊度偏高，建议使用过滤设备')
-            
-            return {
-                'risk_level': risk_level,
-                'risk_assessment': f'基于水质检测数据，各项指标{"均在正常范围内" if risk_level == "低风险" else "存在异常"}，风险等级为{risk_level}。',
-                'data_analysis': f'水质数据分析：TDS值{tds}ppm{"正常" if tds < 500 else "偏高"}，pH值{ph}{"正常" if 6.5 <= ph <= 8 else "异常"}，温度{temperature}°C{"正常" if 20 <= temperature <= 30 else "异常"}，浊度{turbidity}NTU{"正常" if turbidity < 2 else "偏高"}。重金属含量均在安全范围内。',
-                'recommendations': recommendations,
-                'ai_source': '百度千帆',
-                'analysis_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
+            with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                f.write("❌ DeepSeek API调用失败，返回值为None\n")
+            # API调用失败时返回错误，不再返回模拟结果
+            raise Exception("DeepSeek API调用失败")
     except Exception as e:
-        print(f"❌ 百度千帆API调用异常: {str(e)}")
-        # 异常情况下也返回一个基于用户输入数据的模拟AI分析结果
-        tds = data.get('tds', 0)
-        temperature = data.get('temperature', 0)
-        ph = data.get('ph', 0)
-        turbidity = data.get('turbidity', 0)
-        
-        # 基于数据生成风险等级
-        risk_level = '低风险'
-        if tds > 1000 or ph < 6 or ph > 8.5 or turbidity > 5:
-            risk_level = '高风险'
-        elif tds > 500 or ph < 6.5 or ph > 8 or turbidity > 2:
-            risk_level = '中风险'
-        
-            # 基于数据生成建议
-            recommendations = []
-            if risk_level == '低风险':
-                recommendations = [
-                    '水质状况良好，建议定期监测保持现状',
-                    '建议每季度进行一次全面水质检测',
-                    '保持当前的水质管理措施'
-                ]
-            elif risk_level == '中风险':
-                recommendations = [
-                    '水质存在轻度异常，建议加强监测频率',
-                    '建议每月进行一次水质检测',
-                    '检查水源是否受到污染',
-                    '考虑使用水质净化设备'
-                ]
-            else: # 高风险
-                recommendations = [
-                    '水质存在严重异常，建议立即采取措施',
-                    '停止使用该水源进行饮用或灌溉',
-                    '联系专业水质检测机构进行详细分析',
-                    '排查污染源并采取治理措施',
-                    '建议安装专业的水质净化系统'
-                ]
-            
-            # 根据具体指标异常添加针对性建议
-            if tds > 1000:
-                recommendations.append('TDS值过高，建议使用反渗透净水器')
-            elif tds > 500:
-                recommendations.append('TDS值偏高，建议使用活性炭过滤器')
-                
-            if ph < 6 or ph > 8.5:
-                recommendations.append('pH值异常，建议使用pH调节剂')
-            
-            if temperature > 30:
-                recommendations.append('水温过高，建议检查水源是否受到热污染')
-            
-            if turbidity > 5:
-                recommendations.append('浊度严重超标，建议使用沉淀池和过滤系统')
-            elif turbidity > 2:
-                recommendations.append('浊度偏高，建议使用过滤设备')
-            
-            return {
-                'risk_level': risk_level,
-                'risk_assessment': f'基于水质检测数据，各项指标{"均在正常范围内" if risk_level == "低风险" else "存在异常"}，风险等级为{risk_level}。',
-                'data_analysis': f'水质数据分析：TDS值{tds}ppm{"正常" if tds < 500 else "偏高"}，pH值{ph}{"正常" if 6.5 <= ph <= 8 else "异常"}，温度{temperature}°C{"正常" if 20 <= temperature <= 30 else "异常"}，浊度{turbidity}NTU{"正常" if turbidity < 2 else "偏高"}。重金属含量均在安全范围内。',
-                'recommendations': recommendations,
-                'ai_source': '百度千帆',
-                'analysis_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-
-    # 不再回退到模拟分析
-    # print("⚠️ 回退到模拟分析")
-    # analysis_result = simulate_ai_analysis(data)
-    # print("📊 使用模拟分析结果")
-    # return analysis_result
+        with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+            f.write(f"❌ DeepSeek API调用异常: {str(e)}\n")
+            import traceback
+            traceback.print_exc(file=f)
+        # 异常情况下直接抛出错误，不再返回模拟结果
+        raise
 
 def call_qianfan_api(prompt):
     """
-    调用百度千帆·大模型平台API（新版v2接口）
-    只需要 API Key，无需 Secret Key
+    调用DeepSeek大模型API
     """
     import requests
     import json
@@ -1386,7 +1295,8 @@ def call_qianfan_api(prompt):
 
     API_KEY = "sk-d9921cc261c04d5a82906359fa2bddf5"
 
-    api_url = "https://qianfan.baidubce.com/v2/chat/completions"
+    # 使用DeepSeek官方API端点
+    api_url = "https://api.deepseek.com/v1/chat/completions"
 
     headers = {
         "Content-Type": "application/json",
@@ -1394,12 +1304,11 @@ def call_qianfan_api(prompt):
     }
 
     data = {
-        "model": "deepseek-v3.1-250821",
+        "model": "deepseek-chat",
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.7,
         "top_p": 0.8,
-        "penalty_score": 1.0,
-        "max_output_tokens": 2000,
+        "max_tokens": 2000,
     }
 
     max_retries = 2
@@ -1407,56 +1316,76 @@ def call_qianfan_api(prompt):
 
     for attempt in range(max_retries):
         try:
-            print(f"API调用尝试 {attempt + 1}/{max_retries}")
-            response = requests.post(api_url, headers=headers, json=data)
-            print("状态码:", response.status_code)
+            # 写入日志
+            with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                f.write(f"API调用尝试 {attempt + 1}/{max_retries}\n")
+            
+            response = requests.post(api_url, headers=headers, json=data, timeout=60)
+            
+            # 写入日志
+            with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                f.write(f"状态码: {response.status_code}\n")
+                f.write(f"响应内容: {response.text}\n")
+            
             result = response.json()
 
             if response.status_code == 429:
                 if attempt < max_retries - 1:
-                    print(f"遇到速率限制，等待 {retry_delay} 秒后重试...")
+                    with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                        f.write(f"遇到速率限制，等待 {retry_delay} 秒后重试...\n")
                     time.sleep(retry_delay)
                     continue
                 else:
-                    print("达到最大重试次数，API调用失败")
-                    return None
+                    with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                        f.write("达到最大重试次数，API调用失败\n")
+                    raise Exception("达到最大重试次数，API调用失败")
 
             if response.status_code != 200:
-                print(f"API调用失败，状态码: {response.status_code}")
-                print(f"响应内容: {response.text}")
+                error_message = f"API调用失败，状态码: {response.status_code}, 响应内容: {response.text}"
                 if attempt < max_retries - 1:
-                    print(f"等待 {retry_delay} 秒后重试...")
+                    with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                        f.write(f"等待 {retry_delay} 秒后重试...\n")
                     time.sleep(retry_delay)
                     continue
                 else:
-                    return None
+                    raise Exception(error_message)
 
             if "result" in result:
                 ai_response = result["result"]
-                print(f"✅ 获得真实大模型分析结果")
+                with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                    f.write(f"✅ 获得真实大模型分析结果: {ai_response[:100]}...\n")
                 return parse_ai_response(ai_response)
             elif "choices" in result and result["choices"]:
                 ai_response = result["choices"][0]["message"]["content"]
-                print(f"✅ 获得真实大模型分析结果")
+                with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                    f.write(f"✅ 获得真实大模型分析结果: {ai_response[:100]}...\n")
                 return parse_ai_response(ai_response)
             else:
-                print("百度千帆API调用失败:", result)
+                error_message = f"DeepSeek API调用失败: {result}"
+                with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                    f.write(f"DeepSeek API调用失败: {result}\n")
                 if attempt < max_retries - 1:
-                    print(f"等待 {retry_delay} 秒后重试...")
+                    with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                        f.write(f"等待 {retry_delay} 秒后重试...\n")
                     time.sleep(retry_delay)
                     continue
                 else:
-                    return None
+                    raise Exception(error_message)
 
         except Exception as e:
-            print(f"调用百度千帆API时发生错误: {e}")
+            error_message = f"调用DeepSeek API时发生错误: {e}"
+            with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                f.write(f"调用DeepSeek API时发生错误: {e}\n")
+                import traceback
+                traceback.print_exc(file=f)
             if attempt < max_retries - 1:
-                print(f"等待 {retry_delay} 秒后重试...")
+                with open('ai_analysis.log', 'a', encoding='utf-8') as f:
+                    f.write(f"等待 {retry_delay} 秒后重试...\n")
                 time.sleep(retry_delay)
             else:
-                return None
+                raise Exception(error_message)
 
-    return None
+    raise Exception("DeepSeek API调用失败")
 
 def parse_ai_response(ai_response):
     """
@@ -1469,7 +1398,14 @@ def parse_ai_response(ai_response):
             try:
                 parsed_result = json.loads(ai_response)
                 print(f"JSON解析成功: {parsed_result}")
-                parsed_result['ai_source'] = '百度千帆'
+                # 清理多余的*号
+                if 'risk_assessment' in parsed_result:
+                    parsed_result['risk_assessment'] = parsed_result['risk_assessment'].strip('*').strip()
+                if 'data_analysis' in parsed_result:
+                    parsed_result['data_analysis'] = parsed_result['data_analysis'].strip('*').strip()
+                if 'recommendations' in parsed_result:
+                    parsed_result['recommendations'] = parsed_result['recommendations']
+                parsed_result['ai_source'] = 'DeepSeek'
                 parsed_result['analysis_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 return parsed_result
             except json.JSONDecodeError as e:
@@ -1477,17 +1413,20 @@ def parse_ai_response(ai_response):
 
         import re
 
+        # 清理多余的*号
+        ai_response = ai_response.strip('*').strip()
+
         risk_level_match = re.search(r'风险等级[：:]\s*([低中高]风险)', ai_response)
         risk_level = risk_level_match.group(1) if risk_level_match else "未知"
 
         risk_assessment_match = re.search(r'风险评估[：:](.*?)(?=数据分析|改善建议|$)', ai_response, re.DOTALL)
-        risk_assessment = risk_assessment_match.group(1).strip() if risk_assessment_match else "AI分析结果"
+        risk_assessment = risk_assessment_match.group(1).strip('*').strip() if risk_assessment_match else "AI分析结果"
 
         data_analysis_match = re.search(r'数据分析[：:](.*?)(?=改善建议|$)', ai_response, re.DOTALL)
-        data_analysis = data_analysis_match.group(1).strip() if data_analysis_match else "数据分析结果"
+        data_analysis = data_analysis_match.group(1).strip('*').strip() if data_analysis_match else "数据分析结果"
 
         recommendations_match = re.search(r'改善建议[：:](.*?)$', ai_response, re.DOTALL)
-        recommendations_text = recommendations_match.group(1).strip() if recommendations_match else "建议咨询专业机构"
+        recommendations_text = recommendations_match.group(1).strip('*').strip() if recommendations_match else "建议咨询专业机构"
 
         recommendations = []
         if recommendations_text:
@@ -1507,7 +1446,7 @@ def parse_ai_response(ai_response):
             'risk_assessment': risk_assessment,
             'data_analysis': data_analysis,
             'recommendations': recommendations,
-            'ai_source': '百度千帆',
+            'ai_source': 'DeepSeek',
             'analysis_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
 
@@ -1522,7 +1461,7 @@ def parse_ai_response(ai_response):
             'risk_assessment': 'AI分析结果',
             'data_analysis': '数据分析结果',
             'recommendations': ['建议咨询专业水质检测机构'],
-            'ai_source': '百度千帆',
+            'ai_source': 'DeepSeek',
             'analysis_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
 

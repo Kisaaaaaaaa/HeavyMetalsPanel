@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         body {
             background: linear-gradient(135deg, #0c4a6e 0%, #1e3a8a 50%, #312e81 100%);
@@ -590,6 +591,8 @@
                     }
                 });
                 
+                console.log('发送的数据分析请求:', data);
+                
                 const response = await fetch('/api/ai_analysis', {
                     method: 'POST',
                     headers: {
@@ -598,17 +601,17 @@
                     body: JSON.stringify(data)
                 });
 
+                console.log('API响应状态:', response.status);
+                
                 if (!response.ok) {
-                    throw new Error('分析请求失败');
+                    // 尝试获取API返回的具体错误信息
+                    const errorData = await response.json();
+                    console.log('API错误信息:', errorData);
+                    throw new Error(errorData.details || '分析请求失败');
                 }
 
                 const result = await response.json();
-
                 console.log('API响应:', result);
-                console.log('风险等级:', result.risk_level);
-                console.log('风险评估:', result.risk_assessment);
-                console.log('数据分析:', result.data_analysis);
-                console.log('建议:', result.recommendations);
 
                 displayAnalysisResult(result);
 
@@ -642,14 +645,15 @@
                 riskLevel.classList.add('risk-high');
             }
 
-            riskAssessment.textContent = result.risk_assessment || '暂无风险评估';
-            dataAnalysis.textContent = result.data_analysis || '暂无数据分析';
+            // 使用marked解析Markdown格式的内容
+            riskAssessment.innerHTML = marked.parse(result.risk_assessment || '暂无风险评估');
+            dataAnalysis.innerHTML = marked.parse(result.data_analysis || '暂无数据分析');
 
             recommendationsList.innerHTML = '';
             if (result.recommendations && result.recommendations.length > 0) {
                 result.recommendations.forEach(recommendation => {
                     const li = document.createElement('li');
-                    li.textContent = recommendation;
+                    li.innerHTML = marked.parse(recommendation);
                     recommendationsList.appendChild(li);
                 });
             } else {

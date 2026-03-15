@@ -1,0 +1,483 @@
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用结果: None
+❌ 百度千帆API调用失败，返回值为None
+❌ 百度千帆API调用异常: 百度千帆API调用失败
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1268, in analyze_water_quality_with_ai
+    raise Exception("百度千帆API调用失败")
+Exception: 百度千帆API调用失败
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-yn1hp3eyxk"}
+等待 3 秒后重试...
+API调用尝试 2/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-sshqu7tkh8"}
+API调用结果: None
+❌ 百度千帆API调用失败，返回值为None
+❌ 百度千帆API调用异常: 百度千帆API调用失败
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1268, in analyze_water_quality_with_ai
+    raise Exception("百度千帆API调用失败")
+Exception: 百度千帆API调用失败
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-gxbv9uq8u8"}
+等待 3 秒后重试...
+API调用尝试 2/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-yfbepwc4iz"}
+API调用结果: None
+❌ 百度千帆API调用失败，返回值为None
+❌ 百度千帆API调用异常: 百度千帆API调用失败
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1279, in analyze_water_quality_with_ai
+    raise Exception("百度千帆API调用失败")
+Exception: 百度千帆API调用失败
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-hn2jsnxnik"}
+等待 3 秒后重试...
+API调用尝试 2/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-t3cyu1wiu0"}
+调用百度千帆API时发生错误: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-t3cyu1wiu0"}
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1352, in call_qianfan_api
+    raise Exception(error_message)
+Exception: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-t3cyu1wiu0"}
+❌ 百度千帆API调用异常: 调用百度千帆API时发生错误: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-t3cyu1wiu0"}
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1352, in call_qianfan_api
+    raise Exception(error_message)
+Exception: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-t3cyu1wiu0"}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1266, in analyze_water_quality_with_ai
+    analysis_result = call_qianfan_api(prompt)
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1387, in call_qianfan_api
+    raise Exception(error_message)
+Exception: 调用百度千帆API时发生错误: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-t3cyu1wiu0"}
+
+开始分析水质数据: {'tds': 350, 'temperature': 25.5, 'ph': 7.2, 'turbidity': 0.8, 'pb': 0.015, 'cd': 0.005, 'hg': 0.002, 'cr6': 0.08, 'cu': 0.12, 'ni': 0.05}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25.5 °C
+    - pH值:...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-ctbag5g1ei"}
+等待 3 秒后重试...
+API调用尝试 2/2
+状态码: 401
+响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-xr4zqg6z2u"}
+调用百度千帆API时发生错误: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-xr4zqg6z2u"}
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1352, in call_qianfan_api
+    raise Exception(error_message)
+Exception: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-xr4zqg6z2u"}
+❌ 百度千帆API调用异常: 调用百度千帆API时发生错误: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-xr4zqg6z2u"}
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1352, in call_qianfan_api
+    raise Exception(error_message)
+Exception: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-xr4zqg6z2u"}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1266, in analyze_water_quality_with_ai
+    analysis_result = call_qianfan_api(prompt)
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1387, in call_qianfan_api
+    raise Exception(error_message)
+Exception: 调用百度千帆API时发生错误: API调用失败，状态码: 401, 响应内容: {"error":{"code":"invalid_iam_token","message":"invalid_iam_token","type":"invalid_request_error"},"id":"as-xr4zqg6z2u"}
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 400
+响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+等待 3 秒后重试...
+API调用尝试 2/2
+状态码: 400
+响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+调用百度千帆API时发生错误: API调用失败，状态码: 400, 响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1351, in call_qianfan_api
+    raise Exception(error_message)
+Exception: API调用失败，状态码: 400, 响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+❌ 百度千帆API调用异常: 调用百度千帆API时发生错误: API调用失败，状态码: 400, 响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1351, in call_qianfan_api
+    raise Exception(error_message)
+Exception: API调用失败，状态码: 400, 响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1266, in analyze_water_quality_with_ai
+    analysis_result = call_qianfan_api(prompt)
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1386, in call_qianfan_api
+    raise Exception(error_message)
+Exception: 调用百度千帆API时发生错误: API调用失败，状态码: 400, 响应内容: {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+调用百度千帆API时发生错误: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 754, in _error_catcher
+    yield
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1219, in read_chunked
+    self._update_chunk_length()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1138, in _update_chunk_length
+    line = self._fp.fp.readline()  # type: ignore[union-attr]
+  File "D:\python\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+  File "D:\python\Lib\ssl.py", line 1304, in recv_into
+    return self.read(nbytes, buffer)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\ssl.py", line 1138, in read
+    return self._sslobj.read(len, buffer)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\requests\models.py", line 820, in generate
+    yield from self.raw.stream(chunk_size, decode_content=True)
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1063, in stream
+    yield from self.read_chunked(amt, decode_content=decode_content)
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1202, in read_chunked
+    with self._error_catcher():
+         ~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 759, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.") from e  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1323, in call_qianfan_api
+    response = requests.post(api_url, headers=headers, json=data, timeout=30)
+  File "D:\python\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "D:\python\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "D:\python\Lib\site-packages\requests\sessions.py", line 746, in send
+    r.content
+  File "D:\python\Lib\site-packages\requests\models.py", line 902, in content
+    self._content = b"".join(self.iter_content(CONTENT_CHUNK_SIZE)) or b""
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\requests\models.py", line 826, in generate
+    raise ConnectionError(e)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+等待 3 秒后重试...
+API调用尝试 2/2
+调用百度千帆API时发生错误: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 754, in _error_catcher
+    yield
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1219, in read_chunked
+    self._update_chunk_length()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1138, in _update_chunk_length
+    line = self._fp.fp.readline()  # type: ignore[union-attr]
+  File "D:\python\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+  File "D:\python\Lib\ssl.py", line 1304, in recv_into
+    return self.read(nbytes, buffer)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\ssl.py", line 1138, in read
+    return self._sslobj.read(len, buffer)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\requests\models.py", line 820, in generate
+    yield from self.raw.stream(chunk_size, decode_content=True)
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1063, in stream
+    yield from self.read_chunked(amt, decode_content=decode_content)
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1202, in read_chunked
+    with self._error_catcher():
+         ~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 759, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.") from e  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1323, in call_qianfan_api
+    response = requests.post(api_url, headers=headers, json=data, timeout=30)
+  File "D:\python\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "D:\python\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "D:\python\Lib\site-packages\requests\sessions.py", line 746, in send
+    r.content
+  File "D:\python\Lib\site-packages\requests\models.py", line 902, in content
+    self._content = b"".join(self.iter_content(CONTENT_CHUNK_SIZE)) or b""
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\requests\models.py", line 826, in generate
+    raise ConnectionError(e)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+❌ 百度千帆API调用异常: 调用百度千帆API时发生错误: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 754, in _error_catcher
+    yield
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1219, in read_chunked
+    self._update_chunk_length()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1138, in _update_chunk_length
+    line = self._fp.fp.readline()  # type: ignore[union-attr]
+  File "D:\python\Lib\socket.py", line 719, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+  File "D:\python\Lib\ssl.py", line 1304, in recv_into
+    return self.read(nbytes, buffer)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\ssl.py", line 1138, in read
+    return self._sslobj.read(len, buffer)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\requests\models.py", line 820, in generate
+    yield from self.raw.stream(chunk_size, decode_content=True)
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1063, in stream
+    yield from self.read_chunked(amt, decode_content=decode_content)
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 1202, in read_chunked
+    with self._error_catcher():
+         ~~~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\python\Lib\site-packages\urllib3\response.py", line 759, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.") from e  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1323, in call_qianfan_api
+    response = requests.post(api_url, headers=headers, json=data, timeout=30)
+  File "D:\python\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+  File "D:\python\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "D:\python\Lib\site-packages\requests\sessions.py", line 746, in send
+    r.content
+  File "D:\python\Lib\site-packages\requests\models.py", line 902, in content
+    self._content = b"".join(self.iter_content(CONTENT_CHUNK_SIZE)) or b""
+                    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\requests\models.py", line 826, in generate
+    raise ConnectionError(e)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1266, in analyze_water_quality_with_ai
+    analysis_result = call_qianfan_api(prompt)
+  File "D:\PycharmProjects\重金属检测平台\app.py", line 1386, in call_qianfan_api
+    raise Exception(error_message)
+Exception: 调用百度千帆API时发生错误: HTTPSConnectionPool(host='api.deepseek.com', port=443): Read timed out.
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 200
+响应内容: {"id":"22534479-8999-45c2-8328-9113105e5ffe","object":"chat.completion","created":1773576129,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"**风险等级: 低风险**\n\n**风险评估:**\n当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），远低于中国《生活饮用水卫生标准》（GB 5749-2022）及世界卫生组织（WHO）的指导限值，这是水质安全最关键的保障。基础参数也均在理想范围内，表明水体化学性质稳定，感官性状优良，无急性健康风险。主要风险因素极低，但TDS值处于中等水平，提示水体矿物质含量或溶解性盐类相对较高，长期单一饮用可能对特定人群（如肾脏疾病患者）或特定用途（如精密仪器、高端锅炉用水）产生轻微影响，但作为一般生活饮用水是安全的。\n\n**数据分析:**\n1.  **基础参数:**\n    *   **TDS (350 ppm):** 处于中等水平。中国《生活饮用水卫生标准》的指导值（非强制限值）为 ≤ 1000 mg/L，WHO建议值通常低于600 mg/L。350 ppm在安全范围内，但表明水中溶解的钙、镁、钠、钾、碳酸盐、氯化物、硫酸盐等总含量较高。这可能来源于水源地的地质特征（如流经石灰岩地层）。\n    *   **pH值 (7.2):** 呈中性，非常理想。完全符合标准（6.5-8.5），表明水体无腐蚀性或结垢倾向，对管道和设备友好，饮用口感佳。\n    *   **温度 (25 °C):** 常温，适合常规检测和日常使用，不影响其他参数的评估。\n    *   **浊度 (0.8 NTU):** 极低，清澈透明。远低于国标限值（1 NTU），表明水中悬浮颗粒、胶体物质、微生物（如细菌、寄生虫）的载体极少，物理过滤或沉淀处理效果很好，感官和微生物风险低。\n\n2.  **重金属离子:**\n    *   **铅、镉、汞、六价铬、铜、镍:** 浓度均为 **0 mg/L**（或低于检测方法的最低检出限）。这是一个非常积极的信号。\n        *   **铅、镉、汞、六价铬** 是剧毒重金属，即使在极低浓度下也会对人体健康（特别是神经系统、肾脏）造成累积性危害。未检出意味着水源未受工业排放、含铅管道或电子废弃物等常见污染源的显著污染。\n        *   **铜、镍** 的未检出也表明管道腐蚀（对于铜）或工业污染风险极低。\n    *   所有项目均**未超标**，且远优于国家标准限值（例如：铅≤0.01 mg/L，镉≤0.005 mg/L，汞≤0.001 mg/L，六价铬≤0.05 mg/L，铜≤1.0 mg/L，镍≤0.02 mg/L）。\n\n**改善建议:**\n虽然水质整体安全，但针对TDS值中等的情况，可以采取以下措施进行优化或满足更高要求：\n- **建议1：进行更全面的水质分析。** 建议检测**总硬度**、**氯化物**、**硫酸盐**及**硝酸盐**的浓度。这有助于明确TDS升高的具体原因（是钙镁硬度高，还是钠盐、氯离子等），从而制定更具针对性的处理方案。\n- **建议2：根据用途选择处理方式。**\n    - **对于直接饮用：** 如果追求更纯净的口感或用于冲泡对水质敏感的饮品（如茶、咖啡），可以考虑安装**反渗透（RO）净水器**，它能有效降低TDS至极低水平（通常<50 ppm）。但需注意，RO水矿物质含量极低，长期饮用需确保膳食矿物质摄入充足。\n    - **对于一般生活用水（洗漱、烹饪）：** 当前水质完全无需处理。若担心水垢，可在热水壶等加热设备上使用除垢剂定期清理。\n- **建议3：实施定期监测与维护。** 即使当前数据良好，也应建立定期（如每半年或一年）的水质检测制度，特别是如果水源为自备井或容易受到周边环境变化影响时。同时，确保输配水管网（尤其是老旧小区可能存在的镀锌钢管、铅锡焊管）状况良好，防止因管道腐蚀引入新的污染物。\n- **建议4：关注特定人群需求。** 对于婴儿冲泡奶粉或肾脏功能不全的患者，建议咨询医生。他们可能需要使用TDS更低、成分更稳定的水（如合格的瓶装饮用水或经RO处理的水）。\n- **建议5：保护水源环境。** 如果水源为地下水或地表水，应积极保护水源地周边环境，防止农业面源污染（化肥、农药）、生活污水或工业活动对水源造成潜在威胁。"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":259,"completion_tokens":1018,"total_tokens":1277,"prompt_tokens_details":{"cached_tokens":256},"prompt_cache_hit_tokens":256,"prompt_cache_miss_tokens":3},"system_fingerprint":"fp_eaab8d114b_prod0820_fp8_kvcache"}
+✅ 获得真实大模型分析结果: **风险等级: 低风险**
+
+**风险评估:**
+当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），远低于中国《生活饮用水卫生标准》（GB 5749-202...
+API调用结果: {'risk_level': '低风险', 'risk_assessment': '**\n当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），远低于中国《生活饮用水卫生标准》（GB 5749-2022）及世界卫生组织（WHO）的指导限值，这是水质安全最关键的保障。基础参数也均在理想范围内，表明水体化学性质稳定，感官性状优良，无急性健康风险。主要风险因素极低，但TDS值处于中等水平，提示水体矿物质含量或溶解性盐类相对较高，长期单一饮用可能对特定人群（如肾脏疾病患者）或特定用途（如精密仪器、高端锅炉用水）产生轻微影响，但作为一般生活饮用水是安全的。\n\n**', 'data_analysis': '**\n1.  **基础参数:**\n    *   **TDS (350 ppm):** 处于中等水平。中国《生活饮用水卫生标准》的指导值（非强制限值）为 ≤ 1000 mg/L，WHO建议值通常低于600 mg/L。350 ppm在安全范围内，但表明水中溶解的钙、镁、钠、钾、碳酸盐、氯化物、硫酸盐等总含量较高。这可能来源于水源地的地质特征（如流经石灰岩地层）。\n    *   **pH值 (7.2):** 呈中性，非常理想。完全符合标准（6.5-8.5），表明水体无腐蚀性或结垢倾向，对管道和设备友好，饮用口感佳。\n    *   **温度 (25 °C):** 常温，适合常规检测和日常使用，不影响其他参数的评估。\n    *   **浊度 (0.8 NTU):** 极低，清澈透明。远低于国标限值（1 NTU），表明水中悬浮颗粒、胶体物质、微生物（如细菌、寄生虫）的载体极少，物理过滤或沉淀处理效果很好，感官和微生物风险低。\n\n2.  **重金属离子:**\n    *   **铅、镉、汞、六价铬、铜、镍:** 浓度均为 **0 mg/L**（或低于检测方法的最低检出限）。这是一个非常积极的信号。\n        *   **铅、镉、汞、六价铬** 是剧毒重金属，即使在极低浓度下也会对人体健康（特别是神经系统、肾脏）造成累积性危害。未检出意味着水源未受工业排放、含铅管道或电子废弃物等常见污染源的显著污染。\n        *   **铜、镍** 的未检出也表明管道腐蚀（对于铜）或工业污染风险极低。\n    *   所有项目均**未超标**，且远优于国家标准限值（例如：铅≤0.01 mg/L，镉≤0.005 mg/L，汞≤0.001 mg/L，六价铬≤0.05 mg/L，铜≤1.0 mg/L，镍≤0.02 mg/L）。\n\n**', 'recommendations': ['**建议1：进行更全面的水质分析。** 建议检测**总硬度**、**氯化物**、**硫酸盐**及**硝酸盐**的浓度。这有助于明确TDS升高的具体原因（是钙镁硬度高，还是钠盐、氯离子等），从而制定更具针对性的处理方案。', '**建议2：根据用途选择处理方式。**', '**对于直接饮用：** 如果追求更纯净的口感或用于冲泡对水质敏感的饮品（如茶、咖啡），可以考虑安装**反渗透（RO）净水器**，它能有效降低TDS至极低水平（通常<50 ppm）。但需注意，RO水矿物质含量极低，长期饮用需确保膳食矿物质摄入充足。', '**对于一般生活用水（洗漱、烹饪）：** 当前水质完全无需处理。若担心水垢，可在热水壶等加热设备上使用除垢剂定期清理。', '**建议3：实施定期监测与维护。** 即使当前数据良好，也应建立定期（如每半年或一年）的水质检测制度，特别是如果水源为自备井或容易受到周边环境变化影响时。同时，确保输配水管网（尤其是老旧小区可能存在的镀锌钢管、铅锡焊管）状况良好，防止因管道腐蚀引入新的污染物。', '**建议4：关注特定人群需求。** 对于婴儿冲泡奶粉或肾脏功能不全的患者，建议咨询医生。他们可能需要使用TDS更低、成分更稳定的水（如合格的瓶装饮用水或经RO处理的水）。', '**建议5：保护水源环境。** 如果水源为地下水或地表水，应积极保护水源地周边环境，防止农业面源污染（化肥、农药）、生活污水或工业活动对水源造成潜在威胁。'], 'ai_source': '百度千帆', 'analysis_time': '2026-03-15 20:03:03'}
+✅ 使用百度千帆大模型分析结果
+
+开始分析水质数据: {'tds': 350, 'temperature': 25.5, 'ph': 7.2, 'turbidity': 0.8, 'pb': 0.015, 'cd': 0.005, 'hg': 0.002, 'cr6': 0.08, 'cu': 0.12, 'ni': 0.05}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25.5 °C
+    - pH值:...
+正在调用百度千帆AI进行分析...
+API调用尝试 1/2
+状态码: 200
+响应内容: {"id":"8b4b04cb-82f4-4115-a12f-8342e9c2ced0","object":"chat.completion","created":1773576223,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"**风险等级: 高风险**\n\n**风险评估:**\n当前水质存在明确的健康风险，主要风险来源于重金属污染。其中，**六价铬 (Cr6+)** 浓度严重超标，是构成高风险等级的首要因素。六价铬是国际公认的强致癌物，长期摄入会显著增加患癌风险。此外，铅、镉、汞等重金属虽未超标或轻微超标，但其具有累积毒性，长期饮用仍会对神经系统、肾脏等造成损害。基础水质参数（TDS、pH、浊度）表现良好，表明水体在物理和常规化学指标上合格，但无法掩盖重金属污染带来的严重健康威胁。\n\n**数据分析:**\n*   **基础参数:**\n    *   **TDS (350 ppm):** 处于中等水平，属于可接受范围（通常饮用水建议低于500 ppm）。未超标。\n    *   **温度 (25.5 °C):** 适宜，不影响水质安全评价。\n    *   **pH值 (7.2):** 呈中性，完全符合饮用水标准（通常为6.5-8.5）。理想。\n    *   **浊度 (0.8 NTU):** 非常低，表明水体清澈，悬浮物少，远优于标准（通常<1 NTU）。优秀。\n*   **重金属参数 (对照《生活饮用水卫生标准》GB 5749-2022):**\n    *   **六价铬 (Cr6+): 0.08 mg/L** → **严重超标**。国标限值为 **0.05 mg/L**。超标60%。这是最严重的污染项，可能来源于工业电镀、皮革鞣制、染料等废水排放。\n    *   **铅 (Pb2+): 0.015 mg/L** → **超标**。国标限值为 **0.01 mg/L**。超标50%。可能来源于老旧管道、工业排放或环境沉积。\n    *   **镉 (Cd2+): 0.005 mg/L** → **达标**。国标限值为0.005 mg/L。已处于限值边缘，需密切关注。\n    *   **汞 (Hg): 0.002 mg/L** → **达标**。国标限值为0.001 mg/L。**需注意：此处数据为0.002 mg/L，已超过国标0.001 mg/L的限值，构成超标。**（假设数据准确，此项目同样超标，进一步加剧风险）。\n    *   **铜 (Cu2+): 0.12 mg/L** → **达标**。国标限值为1.0 mg/L。含量安全。\n    *   **镍 (Ni2+): 0.05 mg/L** → **达标**。国标限值为0.02 mg/L。含量安全。\n\n**改善建议:**\n1.  **立即停止直接饮用**：鉴于六价铬严重超标，且铅、汞可能超标，**切勿直接将此水作为饮用水、烹饪用水**。应立即寻找替代安全水源（如购买瓶装水、确认安全的市政供水）。\n2.  **安装专业净水设备**：如需长期使用此水源，必须安装处理能力强的终端净水器。**首选反渗透（RO）净水机**，它能有效去除超过99%的重金属离子（包括六价铬、铅、汞、镉等）。务必定期更换滤芯。\n3.  **进行污染源调查与管控**：此水质表明可能存在工业污染源。建议向当地环保部门报告，对上游及周边区域进行排查，重点检查电镀、化工、矿山、电子制造等企业，从源头遏制污染排放。\n4.  **定期进行权威检测**：即使安装了净水设备，也应每半年至一年将处理后的水送至有资质的实验室进行全套重金属检测，确保净水效果持续有效。\n5.  **区分用水途径**：在问题彻底解决前，此类水可用于冲厕、拖地等非接触性用途，但避免用于洗漱（尤其是儿童），因为皮肤接触和吸入也可能带来风险。\n\n---\n**重要提示**：以上分析基于您提供的数据。水质安全关乎健康，对于存在高风险污染的水源，最稳妥的做法是依靠专业机构的全面检测和官方指导。建议您尽快联系当地供水部门或环境保护机构进行正式核查。"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":273,"completion_tokens":909,"total_tokens":1182,"prompt_tokens_details":{"cached_tokens":0},"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":273},"system_fingerprint":"fp_eaab8d114b_prod0820_fp8_kvcache"}
+✅ 获得真实大模型分析结果: **风险等级: 高风险**
+
+**风险评估:**
+当前水质存在明确的健康风险，主要风险来源于重金属污染。其中，**六价铬 (Cr6+)** 浓度严重超标，是构成高风险等级的首要因素。六价铬是国际公认的...
+API调用结果: {'risk_level': '高风险', 'risk_assessment': '**\n当前水质存在明确的健康风险，主要风险来源于重金属污染。其中，**六价铬 (Cr6+)** 浓度严重超标，是构成高风险等级的首要因素。六价铬是国际公认的强致癌物，长期摄入会显著增加患癌风险。此外，铅、镉、汞等重金属虽未超标或轻微超标，但其具有累积毒性，长期饮用仍会对神经系统、肾脏等造成损害。基础水质参数（TDS、pH、浊度）表现良好，表明水体在物理和常规化学指标上合格，但无法掩盖重金属污染带来的严重健康威胁。\n\n**', 'data_analysis': '**\n*   **基础参数:**\n    *   **TDS (350 ppm):** 处于中等水平，属于可接受范围（通常饮用水建议低于500 ppm）。未超标。\n    *   **温度 (25.5 °C):** 适宜，不影响水质安全评价。\n    *   **pH值 (7.2):** 呈中性，完全符合饮用水标准（通常为6.5-8.5）。理想。\n    *   **浊度 (0.8 NTU):** 非常低，表明水体清澈，悬浮物少，远优于标准（通常<1 NTU）。优秀。\n*   **重金属参数 (对照《生活饮用水卫生标准》GB 5749-2022):**\n    *   **六价铬 (Cr6+): 0.08 mg/L** → **严重超标**。国标限值为 **0.05 mg/L**。超标60%。这是最严重的污染项，可能来源于工业电镀、皮革鞣制、染料等废水排放。\n    *   **铅 (Pb2+): 0.015 mg/L** → **超标**。国标限值为 **0.01 mg/L**。超标50%。可能来源于老旧管道、工业排放或环境沉积。\n    *   **镉 (Cd2+): 0.005 mg/L** → **达标**。国标限值为0.005 mg/L。已处于限值边缘，需密切关注。\n    *   **汞 (Hg): 0.002 mg/L** → **达标**。国标限值为0.001 mg/L。**需注意：此处数据为0.002 mg/L，已超过国标0.001 mg/L的限值，构成超标。**（假设数据准确，此项目同样超标，进一步加剧风险）。\n    *   **铜 (Cu2+): 0.12 mg/L** → **达标**。国标限值为1.0 mg/L。含量安全。\n    *   **镍 (Ni2+): 0.05 mg/L** → **达标**。国标限值为0.02 mg/L。含量安全。\n\n**', 'recommendations': ['**立即停止直接饮用**：鉴于六价铬严重超标，且铅、汞可能超标，**切勿直接将此水作为饮用水、烹饪用水**。应立即寻找替代安全水源（如购买瓶装水、确认安全的市政供水）。', '**安装专业净水设备**：如需长期使用此水源，必须安装处理能力强的终端净水器。**首选反渗透（RO）净水机**，它能有效去除超过99%的重金属离子（包括六价铬、铅、汞、镉等）。务必定期更换滤芯。', '**进行污染源调查与管控**：此水质表明可能存在工业污染源。建议向当地环保部门报告，对上游及周边区域进行排查，重点检查电镀、化工、矿山、电子制造等企业，从源头遏制污染排放。'], 'ai_source': '百度千帆', 'analysis_time': '2026-03-15 20:04:29'}
+✅ 使用百度千帆大模型分析结果
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用DeepSeek AI进行分析...
+API调用尝试 1/2
+状态码: 200
+响应内容: {"id":"745bc253-e20a-4a24-b485-3bb9e3bde314","object":"chat.completion","created":1773576509,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"**风险等级: 低风险**\n\n**风险评估:**\n当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），这消除了饮用水中最令人担忧的急性及慢性毒性风险。基础参数均在常规安全限值内，表明水体感官性状适宜，化学性质稳定，没有明显的污染迹象。\n\n**数据分析:**\n1.  **基础参数:**\n    *   **TDS (350 ppm):** 处于中等偏低水平。世界卫生组织（WHO）指南指出，TDS低于600 mg/L的水通常口感良好。此数值表明水中含有一定量的矿物质（如钙、镁、钠、钾等），但远未达到影响健康或口感的警戒线（通常认为>1000 ppm需关注）。\n    *   **pH值 (7.2):** 呈中性偏微碱，非常理想。中国《生活饮用水卫生标准》（GB 5749-2022）要求pH在6.5-8.5之间，7.2完全符合，表明水体腐蚀性或结垢倾向很低，化学性质稳定。\n    *   **浊度 (0.8 NTU):** 极低，远优于国家标准（限值为1 NTU，水源与净水技术条件限制时为3 NTU）。表明水体清澈透明，悬浮颗粒物、微生物载体极少，感官性状优秀。\n    *   **温度 (25 °C):** 为常温，不影响水质化学指标的评价。\n\n2.  **重金属离子:**\n    *   铅、镉、汞、六价铬、铜、镍的浓度均为 **0 mg/L**。\n    *   **分析:** 这六项是水质安全的核心监控指标。未检出意味着：\n        *   水源未受到工业排放、管道腐蚀（针对铅、铜）、或地质背景的显著重金属污染。\n        *   水质在重金属方面完全符合并优于《生活饮用水卫生标准》的严格限值（例如，铅≤0.01 mg/L，镉≤0.005 mg/L，六价铬≤0.05 mg/L等）。\n        *   消除了相关的致癌、神经毒性、肾脏损害等健康风险。\n\n**改善建议:**\n虽然当前水质为低风险，但为了长期维持水质安全与提升饮用体验，可以考虑以下措施：\n\n1.  **定期监测与维护:** 建议每半年至一年对水质进行一次基础项（TDS， pH， 浊度）检测，每年进行一次包含重金属、微生物等项目的全面检测。若使用家用净水器或管道系统，需按说明书定期更换滤芯并清洗水箱。\n2.  **关注TDS来源与口感:** 若希望获得更柔和的口感或用于特定用途（如冲泡精品咖啡、茶），可考虑安装带有反渗透（RO）或选择性过滤技术的净水器，以降低TDS。但需注意，RO处理后的水矿物质含量极低，长期饮用需评估膳食矿物质摄入是否均衡。\n3.  **确保输水管道安全:** 水质安全在用户端很大程度上取决于建筑内部管道。若房屋管道老旧（尤其是含铅焊料或镀锌管），即使入户水质优良，也可能存在二次污染风险。建议排查并考虑更新为PPR、不锈钢等安全管材。\n4.  **正确储存与使用:** 避免用水容器（如饮水机内胆、水壶）长时间存水，应使用玻璃、不锈钢或食品级塑料容器，并定期清洗消毒，防止微生物滋生。\n5.  **关注水源变化:** 如果使用的是自备井水或小区直饮水，需密切关注水源地周边环境是否有新的潜在污染源（如新建工厂、农业活动变化等）。\n\n**总结：** 当前水质数据表现优秀，可直接安全使用。后续重点应放在 **定期监控、管道维护和良好用水习惯** 上，以防范潜在风险。"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":259,"completion_tokens":814,"total_tokens":1073,"prompt_tokens_details":{"cached_tokens":256},"prompt_cache_hit_tokens":256,"prompt_cache_miss_tokens":3},"system_fingerprint":"fp_eaab8d114b_prod0820_fp8_kvcache"}
+✅ 获得真实大模型分析结果: **风险等级: 低风险**
+
+**风险评估:**
+当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），这消除了饮用水中最令人担忧的急性及慢性毒性风险。基础参数...
+API调用结果: {'risk_level': '低风险', 'risk_assessment': '**\n当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），这消除了饮用水中最令人担忧的急性及慢性毒性风险。基础参数均在常规安全限值内，表明水体感官性状适宜，化学性质稳定，没有明显的污染迹象。\n\n**', 'data_analysis': '**\n1.  **基础参数:**\n    *   **TDS (350 ppm):** 处于中等偏低水平。世界卫生组织（WHO）指南指出，TDS低于600 mg/L的水通常口感良好。此数值表明水中含有一定量的矿物质（如钙、镁、钠、钾等），但远未达到影响健康或口感的警戒线（通常认为>1000 ppm需关注）。\n    *   **pH值 (7.2):** 呈中性偏微碱，非常理想。中国《生活饮用水卫生标准》（GB 5749-2022）要求pH在6.5-8.5之间，7.2完全符合，表明水体腐蚀性或结垢倾向很低，化学性质稳定。\n    *   **浊度 (0.8 NTU):** 极低，远优于国家标准（限值为1 NTU，水源与净水技术条件限制时为3 NTU）。表明水体清澈透明，悬浮颗粒物、微生物载体极少，感官性状优秀。\n    *   **温度 (25 °C):** 为常温，不影响水质化学指标的评价。\n\n2.  **重金属离子:**\n    *   铅、镉、汞、六价铬、铜、镍的浓度均为 **0 mg/L**。\n    *   **分析:** 这六项是水质安全的核心监控指标。未检出意味着：\n        *   水源未受到工业排放、管道腐蚀（针对铅、铜）、或地质背景的显著重金属污染。\n        *   水质在重金属方面完全符合并优于《生活饮用水卫生标准》的严格限值（例如，铅≤0.01 mg/L，镉≤0.005 mg/L，六价铬≤0.05 mg/L等）。\n        *   消除了相关的致癌、神经毒性、肾脏损害等健康风险。\n\n**', 'recommendations': ['**定期监测与维护:** 建议每半年至一年对水质进行一次基础项（TDS， pH， 浊度）检测，每年进行一次包含重金属、微生物等项目的全面检测。若使用家用净水器或管道系统，需按说明书定期更换滤芯并清洗水箱。', '**关注TDS来源与口感:** 若希望获得更柔和的口感或用于特定用途（如冲泡精品咖啡、茶），可考虑安装带有反渗透（RO）或选择性过滤技术的净水器，以降低TDS。但需注意，RO处理后的水矿物质含量极低，长期饮用需评估膳食矿物质摄入是否均衡。', '**确保输水管道安全:** 水质安全在用户端很大程度上取决于建筑内部管道。若房屋管道老旧（尤其是含铅焊料或镀锌管），即使入户水质优良，也可能存在二次污染风险。建议排查并考虑更新为PPR、不锈钢等安全管材。'], 'ai_source': 'DeepSeek', 'analysis_time': '2026-03-15 20:09:09'}
+✅ 使用DeepSeek大模型分析结果
+
+开始分析水质数据: {'tds': 350, 'temperature': 25.5, 'ph': 7.2, 'turbidity': 0.8, 'pb': 0.015, 'cd': 0.005, 'hg': 0.002, 'cr6': 0.08, 'cu': 0.12, 'ni': 0.05}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25.5 °C
+    - pH值:...
+正在调用DeepSeek AI进行分析...
+API调用尝试 1/2
+状态码: 200
+响应内容: {"id":"c039c3d6-0729-48f2-92d7-2ff23dc456c0","object":"chat.completion","created":1773576566,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"**风险等级: 高风险**\n\n**风险评估:**\n当前水质存在明确且严重的健康风险，主要风险来源于重金属污染。其中，**六价铬**浓度严重超标，是首要风险因素。铅、镉、汞等重金属虽未超过饮用水标准，但其浓度已处于较高水平，存在长期累积性健康风险。基础水质参数（TDS、pH、浊度）表现良好，但这无法掩盖重金属污染带来的核心安全问题。此水质不适合直接饮用或长期接触。\n\n**数据分析:**\n1.  **基础参数**：\n    *   **TDS (350 ppm)**：处于良好范围（<500 ppm），表明水中溶解性无机盐总量适中，口感通常可接受。\n    *   **pH值 (7.2)**：呈中性，符合饮用水标准（通常6.5-8.5），对管道腐蚀性和人体适宜性均良好。\n    *   **温度 (25.5°C)**：属常温，无特殊影响。\n    *   **浊度 (0.8 NTU)**：极低，表明水体清澈，悬浮颗粒物很少，感官性状优秀。\n\n2.  **重金属参数（对照中国《生活饮用水卫生标准》GB 5749-2022）**：\n    *   **六价铬 (Cr6+): 0.08 mg/L** → **严重超标**。标准限值为 **0.05 mg/L**。超标60%。六价铬是强致癌物，可导致肺癌、皮肤溃疡等，是当前水质最危险的污染物。\n    *   **铅 (Pb2+): 0.015 mg/L** → **超标**。标准限值为 **0.01 mg/L**。超标50%。铅具有神经毒性，尤其危害儿童智力发育。\n    *   **镉 (Cd2+): 0.005 mg/L** → **达标但临界**。标准限值为 **0.005 mg/L**。已触及上限。镉会在肾脏和骨骼中蓄积，导致“痛痛病”等慢性疾病。\n    *   **汞 (Hg): 0.002 mg/L** → **达标**。标准限值为 **0.001 mg/L**。**注：此处数据疑似有误，0.002 mg/L已超标100%。若数据准确，则汞同样超标，风险极高。** 汞主要损害神经系统和肾脏。\n    *   **铜 (Cu2+): 0.12 mg/L** → **达标**。标准限值为 **1.0 mg/L**。浓度安全，但可能影响水的口感（金属味）。\n    *   **镍 (Ni2+): 0.05 mg/L** → **达标**。标准限值为 **0.02 mg/L**。浓度在安全范围内。\n\n**改善建议:**\n1.  **立即停止饮用与直接接触**：在未进行有效处理前，切勿将此水作为饮用水、烹饪用水或直接接触皮肤（如长时间沐浴）。\n2.  **安装专业净水设备**：必须采用能高效去除重金属的终端净水方案。\n    *   **首选：反渗透净水器**。其过滤精度最高，能有效去除包括六价铬、铅、镉、汞在内的几乎所有溶解性重金属离子，是应对此类复合重金属污染最可靠的方法。\n    *   **备选/辅助：专用重金属过滤滤芯**。如使用符合NSF/42、53标准，并明确标注对铬（六价）、铅、镉等有高去除率的活性炭滤芯或特种介质滤芯，但需定期严格更换。\n3.  **查明并切断污染源**：强烈建议追溯水源。高浓度的六价铬和铅通常与工业排放（电镀、制革、化工）、老旧含铅管道或配件腐蚀、受污染的地下水有关。需联系当地环保或水务部门进行专业调查。\n4.  **定期进行权威水质检测**：在采取处理措施后，应委托有资质的实验室对处理后的出水进行检测，重点确认重金属指标是否已降至安全限值以内，并建立定期检测制度（如每半年或一年一次）。\n5.  **考虑替代水源**：在污染源无法短期内查明或消除的情况下，应考虑使用可靠的桶装水或瓶装水作为临时的饮用水源。\n\n---\n**重要提示**：以上分析基于您提供的数据。特别是汞的浓度，请务必核实其准确性（0.002 mg/L）。若数据无误，则汞污染与六价铬、铅污染共同构成了极高的健康风险，必须立即采取行动。建议将所有水样送至专业机构进行复核检测。"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":273,"completion_tokens":974,"total_tokens":1247,"prompt_tokens_details":{"cached_tokens":256},"prompt_cache_hit_tokens":256,"prompt_cache_miss_tokens":17},"system_fingerprint":"fp_eaab8d114b_prod0820_fp8_kvcache"}
+✅ 获得真实大模型分析结果: **风险等级: 高风险**
+
+**风险评估:**
+当前水质存在明确且严重的健康风险，主要风险来源于重金属污染。其中，**六价铬**浓度严重超标，是首要风险因素。铅、镉、汞等重金属虽未超过饮用水标准，但...
+API调用结果: {'risk_level': '高风险', 'risk_assessment': '**\n当前水质存在明确且严重的健康风险，主要风险来源于重金属污染。其中，**六价铬**浓度严重超标，是首要风险因素。铅、镉、汞等重金属虽未超过饮用水标准，但其浓度已处于较高水平，存在长期累积性健康风险。基础水质参数（TDS、pH、浊度）表现良好，但这无法掩盖重金属污染带来的核心安全问题。此水质不适合直接饮用或长期接触。\n\n**', 'data_analysis': '**\n1.  **基础参数**：\n    *   **TDS (350 ppm)**：处于良好范围（<500 ppm），表明水中溶解性无机盐总量适中，口感通常可接受。\n    *   **pH值 (7.2)**：呈中性，符合饮用水标准（通常6.5-8.5），对管道腐蚀性和人体适宜性均良好。\n    *   **温度 (25.5°C)**：属常温，无特殊影响。\n    *   **浊度 (0.8 NTU)**：极低，表明水体清澈，悬浮颗粒物很少，感官性状优秀。\n\n2.  **重金属参数（对照中国《生活饮用水卫生标准》GB 5749-2022）**：\n    *   **六价铬 (Cr6+): 0.08 mg/L** → **严重超标**。标准限值为 **0.05 mg/L**。超标60%。六价铬是强致癌物，可导致肺癌、皮肤溃疡等，是当前水质最危险的污染物。\n    *   **铅 (Pb2+): 0.015 mg/L** → **超标**。标准限值为 **0.01 mg/L**。超标50%。铅具有神经毒性，尤其危害儿童智力发育。\n    *   **镉 (Cd2+): 0.005 mg/L** → **达标但临界**。标准限值为 **0.005 mg/L**。已触及上限。镉会在肾脏和骨骼中蓄积，导致“痛痛病”等慢性疾病。\n    *   **汞 (Hg): 0.002 mg/L** → **达标**。标准限值为 **0.001 mg/L**。**注：此处数据疑似有误，0.002 mg/L已超标100%。若数据准确，则汞同样超标，风险极高。** 汞主要损害神经系统和肾脏。\n    *   **铜 (Cu2+): 0.12 mg/L** → **达标**。标准限值为 **1.0 mg/L**。浓度安全，但可能影响水的口感（金属味）。\n    *   **镍 (Ni2+): 0.05 mg/L** → **达标**。标准限值为 **0.02 mg/L**。浓度在安全范围内。\n\n**', 'recommendations': ['**立即停止饮用与直接接触**：在未进行有效处理前，切勿将此水作为饮用水、烹饪用水或直接接触皮肤（如长时间沐浴）。', '**安装专业净水设备**：必须采用能高效去除重金属的终端净水方案。', '**查明并切断污染源**：强烈建议追溯水源。高浓度的六价铬和铅通常与工业排放（电镀、制革、化工）、老旧含铅管道或配件腐蚀、受污染的地下水有关。需联系当地环保或水务部门进行专业调查。'], 'ai_source': 'DeepSeek', 'analysis_time': '2026-03-15 20:10:13'}
+✅ 使用DeepSeek大模型分析结果
+
+开始分析水质数据: {'tds': 350, 'temperature': 25, 'ph': 7.2, 'turbidity': 0.8}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25 °C
+    - pH值: 7...
+正在调用DeepSeek AI进行分析...
+API调用尝试 1/2
+状态码: 200
+响应内容: {"id":"77853d52-66e3-410a-be7d-ef088ea2e9b9","object":"chat.completion","created":1773576744,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"**风险等级: 低风险**\n\n**风险评估:**\n根据您提供的数据，当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），这是非常理想的结果，表明水源未受工业或环境重金属污染。基础参数也均在常规安全限值内，不存在急性健康风险。主要的风险因素非常有限，主要关注点在于TDS值处于中等偏高水平，长期饮用可能对口感产生影响，并对特定人群（如婴幼儿、肾脏疾病患者）或特定用途（如精密仪器、高端水产养殖）构成轻微潜在影响。\n\n**数据分析:**\n1.  **基础参数分析:**\n    *   **TDS (350 ppm):** 处于世界卫生组织（WHO）建议的饮用水中可接受水平（<600 ppm）之内，但已接近中国《生活饮用水卫生标准》（GB 5749-2022）中规定的限值（1000 mg/L）的中上区间。该数值表明水中溶解性无机盐（如钙、镁、钠、钾、碳酸盐等）含量适中偏高，通常源于水源流经矿物质地层。这可能导致水有轻微涩感，并容易在水壶内形成水垢。\n    *   **pH值 (7.2):** 呈中性偏微碱性，完全符合GB 5749-2022标准（6.5-8.5）和WHO指南。此pH值对管道腐蚀性低，口感适宜。\n    *   **浊度 (0.8 NTU):** 远低于国家标准（1 NTU），表明水中悬浮颗粒物极少，水体清澈，感官性状优良，且微生物附着载体的风险低。\n    *   **温度 (25 °C):** 为常温，不影响水质参数的分析有效性。\n\n2.  **重金属离子分析:**\n    *   所有列出的重金属（铅、镉、汞、六价铬、铜、镍）浓度均为 **0 mg/L**，远低于GB 5749-2022中最严格的限值要求（例如，铅≤0.01 mg/L，镉≤0.005 mg/L，六价铬≤0.05 mg/L等）。这表明水源在重金属污染方面安全性极高，无相关健康风险。\n\n**改善建议:**\n虽然水质整体安全，但针对TDS值偏高的情况，若希望提升至更优品质或满足特定需求，可考虑以下建议：\n\n- **建议1：安装反渗透（RO）净水器。** 这是最有效地降低TDS、去除绝大多数溶解性盐类、重金属（尽管现有数据为0）、以及潜在有机污染物的方法。处理后的水口感更佳，几乎无水垢。需注意，RO会产生一定比例的废水，并可能去除部分有益矿物质。\n- **建议2：选择安装超滤（UF）净水器并搭配活性炭滤芯。** 如果您主要希望改善口感、去除余氯和有机物，并保留水中的天然矿物质，且确认重金属无风险（如本次检测），超滤组合是更经济环保的选择。它无法显著降低TDS，但能有效保障微生物和颗粒物安全。\n- **建议3：定期监测与维护。** 水质会随时间变化。建议每1-2年对关键指标（尤其是TDS、pH、浊度及当地可能存在的风险污染物）进行一次检测。若已安装净水设备，务必按照厂家说明定期更换滤芯，以确保其持续有效。\n- **建议4：根据用途区分用水。** 对于日常饮用和烹饪，可使用经过上述净水设备处理的水。对于洗衣、拖地等生活杂用，可直接使用原水。对于加湿器、蒸汽熨斗等易结垢电器，建议使用TDS更低的水（如RO水或蒸馏水）以延长使用寿命。\n- **建议5：咨询专业机构。** 如果您对水源地有特定疑虑（如农业区担心硝酸盐，工业区担心其他有机污染物），或家庭成员有特殊健康状况，可考虑进行更全面的水质分析（检测项目如硝酸盐、亚硝酸盐、挥发酚、有机农药指标等），以获得更具针对性的评估和建议。\n\n---\n**免责声明：** 本分析仅基于您提供的有限数据。一份完整的水质安全评估应包含微生物指标（总大肠菌群、大肠埃希氏菌等）、更多无机物（硝酸盐、氟化物等）及有机物指标。对于决定饮用或使用，建议参考当地官方或权威检测机构的完整报告。"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":259,"completion_tokens":944,"total_tokens":1203,"prompt_tokens_details":{"cached_tokens":256},"prompt_cache_hit_tokens":256,"prompt_cache_miss_tokens":3},"system_fingerprint":"fp_eaab8d114b_prod0820_fp8_kvcache"}
+✅ 获得真实大模型分析结果: **风险等级: 低风险**
+
+**风险评估:**
+根据您提供的数据，当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），这是非常理想的结果，表明水源未受工业或...
+API调用结果: {'risk_level': '低风险', 'risk_assessment': '根据您提供的数据，当前水质整体状况良好，属于安全可用的范围。所有检测的重金属离子浓度均为未检出（0 mg/L），这是非常理想的结果，表明水源未受工业或环境重金属污染。基础参数也均在常规安全限值内，不存在急性健康风险。主要的风险因素非常有限，主要关注点在于TDS值处于中等偏高水平，长期饮用可能对口感产生影响，并对特定人群（如婴幼儿、肾脏疾病患者）或特定用途（如精密仪器、高端水产养殖）构成轻微潜在影响。', 'data_analysis': '1.  **基础参数分析:**\n    *   **TDS (350 ppm):** 处于世界卫生组织（WHO）建议的饮用水中可接受水平（<600 ppm）之内，但已接近中国《生活饮用水卫生标准》（GB 5749-2022）中规定的限值（1000 mg/L）的中上区间。该数值表明水中溶解性无机盐（如钙、镁、钠、钾、碳酸盐等）含量适中偏高，通常源于水源流经矿物质地层。这可能导致水有轻微涩感，并容易在水壶内形成水垢。\n    *   **pH值 (7.2):** 呈中性偏微碱性，完全符合GB 5749-2022标准（6.5-8.5）和WHO指南。此pH值对管道腐蚀性低，口感适宜。\n    *   **浊度 (0.8 NTU):** 远低于国家标准（1 NTU），表明水中悬浮颗粒物极少，水体清澈，感官性状优良，且微生物附着载体的风险低。\n    *   **温度 (25 °C):** 为常温，不影响水质参数的分析有效性。\n\n2.  **重金属离子分析:**\n    *   所有列出的重金属（铅、镉、汞、六价铬、铜、镍）浓度均为 **0 mg/L**，远低于GB 5749-2022中最严格的限值要求（例如，铅≤0.01 mg/L，镉≤0.005 mg/L，六价铬≤0.05 mg/L等）。这表明水源在重金属污染方面安全性极高，无相关健康风险。', 'recommendations': ['**建议1：安装反渗透（RO）净水器。** 这是最有效地降低TDS、去除绝大多数溶解性盐类、重金属（尽管现有数据为0）、以及潜在有机污染物的方法。处理后的水口感更佳，几乎无水垢。需注意，RO会产生一定比例的废水，并可能去除部分有益矿物质。', '**建议2：选择安装超滤（UF）净水器并搭配活性炭滤芯。** 如果您主要希望改善口感、去除余氯和有机物，并保留水中的天然矿物质，且确认重金属无风险（如本次检测），超滤组合是更经济环保的选择。它无法显著降低TDS，但能有效保障微生物和颗粒物安全。', '**建议3：定期监测与维护。** 水质会随时间变化。建议每1-2年对关键指标（尤其是TDS、pH、浊度及当地可能存在的风险污染物）进行一次检测。若已安装净水设备，务必按照厂家说明定期更换滤芯，以确保其持续有效。', '**建议4：根据用途区分用水。** 对于日常饮用和烹饪，可使用经过上述净水设备处理的水。对于洗衣、拖地等生活杂用，可直接使用原水。对于加湿器、蒸汽熨斗等易结垢电器，建议使用TDS更低的水（如RO水或蒸馏水）以延长使用寿命。', '**建议5：咨询专业机构。** 如果您对水源地有特定疑虑（如农业区担心硝酸盐，工业区担心其他有机污染物），或家庭成员有特殊健康状况，可考虑进行更全面的水质分析（检测项目如硝酸盐、亚硝酸盐、挥发酚、有机农药指标等），以获得更具针对性的评估和建议。'], 'ai_source': 'DeepSeek', 'analysis_time': '2026-03-15 20:13:09'}
+✅ 使用DeepSeek大模型分析结果
+
+开始分析水质数据: {'tds': 350, 'temperature': 25.5, 'ph': 7.2, 'turbidity': 0.8, 'pb': 0.015, 'cd': 0.005, 'hg': 0.002, 'cr6': 0.08, 'cu': 0.12, 'ni': 0.05}
+构建的提示词: 
+    你是一位专业的水质分析专家，请分析以下水质检测数据：
+
+    基础水质参数：
+    - TDS (总溶解固体): 350 ppm
+    - 温度: 25.5 °C
+    - pH值:...
+正在调用DeepSeek AI进行分析...
+API调用尝试 1/2
+状态码: 200
+响应内容: {"id":"7a5e893a-669c-405e-b332-8abc5a86bb13","object":"chat.completion","created":1773576818,"model":"deepseek-chat","choices":[{"index":0,"message":{"role":"assistant","content":"**风险等级: 高风险**\n\n**风险评估:**\n当前水质存在明确且严重的健康风险，主要风险来源于重金属污染。其中，**六价铬 (Cr6+)** 的浓度远超国家生活饮用水卫生标准（GB 5749-2022），这是一种已知的强致癌物，对人体健康构成直接威胁。此外，铅、镉、汞等重金属虽未超标，但浓度已接近限值，长期饮用存在累积性健康风险。基础水质参数（TDS、pH、浊度）表现良好，但这无法抵消重金属带来的高风险。\n\n**数据分析:**\n1.  **基础参数**：\n    *   **TDS (350 ppm)**：处于理想范围（<500 ppm），表明水中溶解性无机盐总量适中，口感通常较好。\n    *   **pH值 (7.2)**：呈中性偏微碱，符合饮用水标准（6.5-8.5），对管道腐蚀性小，口感适宜。\n    *   **温度 (25.5°C)**：在常规环境温度范围内，无特殊风险。\n    *   **浊度 (0.8 NTU)**：远低于标准限值（1 NTU），说明水中悬浮颗粒物很少，感官性状良好。\n\n2.  **重金属参数（对照GB 5749-2022标准）**：\n    *   **六价铬 (Cr6+): 0.08 mg/L** → **严重超标**。标准限值为 **0.05 mg/L**。超标60%。这是最主要的风险源，具有高毒性、致癌性和致突变性。\n    *   **铅 (Pb2+): 0.015 mg/L** → **接近限值**。标准限值为 **0.01 mg/L**。超标50%。对儿童神经系统发育危害极大，即使低浓度也有累积风险。\n    *   **镉 (Cd2+): 0.005 mg/L** → **符合但接近限值**。标准限值为 **0.005 mg/L**。已达上限。长期摄入会损害肾脏和骨骼。\n    *   **汞 (Hg): 0.002 mg/L** → **符合标准**。标准限值为 **0.001 mg/L**。超标100%。主要损害神经系统。\n    *   **铜 (Cu2+): 0.12 mg/L** → **符合标准**。标准限值为 **1.0 mg/L**。含量安全，但可能影响水的口感（金属味）。\n    *   **镍 (Ni2+): 0.05 mg/L** → **符合标准**。标准限值为 **0.02 mg/L**。超标150%。对皮肤和呼吸系统有潜在风险。\n\n**改善建议:**\n1.  **立即停止直接饮用与烹饪**：鉴于六价铬严重超标，在问题解决前，**切勿直接饮用或使用该水源进行烹饪、烧开水**。应立即使用可靠的瓶装水或经过严格验证的净水设备出水作为饮用水。\n2.  **安装专业级末端净水设备**：必须选择能有效去除重金属的净水技术。\n    *   **首选：反渗透（RO）净水器**。其过滤精度极高，能去除超过99%的六价铬、铅、镉、汞等重金属离子，是解决当前水质问题最可靠的方法。\n    *   **次选：特定重金属吸附滤芯**。如专门针对铬、铅的优质活性炭滤芯、KDF滤料或特种离子交换树脂滤芯。选购时需明确核实其对于**六价铬**的去除率认证数据。\n3.  **查明并切断污染源**：此水质特征强烈暗示存在工业污染（如电镀、皮革、化工废水渗漏）或老旧含铬输水管网腐蚀。建议：\n    *   检查家庭内部管道，尤其是老式镀锌管或连接件。\n    *   联系物业或当地水务部门，报告水质情况，排查小区公共管道和二次供水设施。\n    *   如果为自备井水，需对周边环境进行工业污染源调查。\n4.  **定期进行权威水质检测**：在采取净化措施后，应委托具有CMA资质的检测机构，对处理后的水进行针对性重金属复检，以确保净化效果持续有效。建议每半年至一年检测一次关键重金属指标。\n5.  **维护与滤芯更换**：若安装净水设备，**必须严格按照厂家建议的周期更换滤芯**，尤其是前置活性炭滤芯和RO膜。滤芯超期服役不仅失效，还可能成为二次污染源。\n\n**总结：** 该水质的感官指标良好，但“隐形杀手”重金属（尤其是致癌物六价铬）污染严重。**首要行动是避免直接接触，并尽快通过专业反渗透净水设备进行深度净化，同时追查污染根源。**"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":273,"completion_tokens":1024,"total_tokens":1297,"prompt_tokens_details":{"cached_tokens":256},"prompt_cache_hit_tokens":256,"prompt_cache_miss_tokens":17},"system_fingerprint":"fp_eaab8d114b_prod0820_fp8_kvcache"}
+✅ 获得真实大模型分析结果: **风险等级: 高风险**
+
+**风险评估:**
+当前水质存在明确且严重的健康风险，主要风险来源于重金属污染。其中，**六价铬 (Cr6+)** 的浓度远超国家生活饮用水卫生标准（GB 5749-20...
+API调用结果: {'risk_level': '高风险', 'risk_assessment': '当前水质存在明确且严重的健康风险，主要风险来源于重金属污染。其中，**六价铬 (Cr6+)** 的浓度远超国家生活饮用水卫生标准（GB 5749-2022），这是一种已知的强致癌物，对人体健康构成直接威胁。此外，铅、镉、汞等重金属虽未超标，但浓度已接近限值，长期饮用存在累积性健康风险。基础水质参数（TDS、pH、浊度）表现良好，但这无法抵消重金属带来的高风险。', 'data_analysis': '1.  **基础参数**：\n    *   **TDS (350 ppm)**：处于理想范围（<500 ppm），表明水中溶解性无机盐总量适中，口感通常较好。\n    *   **pH值 (7.2)**：呈中性偏微碱，符合饮用水标准（6.5-8.5），对管道腐蚀性小，口感适宜。\n    *   **温度 (25.5°C)**：在常规环境温度范围内，无特殊风险。\n    *   **浊度 (0.8 NTU)**：远低于标准限值（1 NTU），说明水中悬浮颗粒物很少，感官性状良好。\n\n2.  **重金属参数（对照GB 5749-2022标准）**：\n    *   **六价铬 (Cr6+): 0.08 mg/L** → **严重超标**。标准限值为 **0.05 mg/L**。超标60%。这是最主要的风险源，具有高毒性、致癌性和致突变性。\n    *   **铅 (Pb2+): 0.015 mg/L** → **接近限值**。标准限值为 **0.01 mg/L**。超标50%。对儿童神经系统发育危害极大，即使低浓度也有累积风险。\n    *   **镉 (Cd2+): 0.005 mg/L** → **符合但接近限值**。标准限值为 **0.005 mg/L**。已达上限。长期摄入会损害肾脏和骨骼。\n    *   **汞 (Hg): 0.002 mg/L** → **符合标准**。标准限值为 **0.001 mg/L**。超标100%。主要损害神经系统。\n    *   **铜 (Cu2+): 0.12 mg/L** → **符合标准**。标准限值为 **1.0 mg/L**。含量安全，但可能影响水的口感（金属味）。\n    *   **镍 (Ni2+): 0.05 mg/L** → **符合标准**。标准限值为 **0.02 mg/L**。超标150%。对皮肤和呼吸系统有潜在风险。', 'recommendations': ['**立即停止直接饮用与烹饪**：鉴于六价铬严重超标，在问题解决前，**切勿直接饮用或使用该水源进行烹饪、烧开水**。应立即使用可靠的瓶装水或经过严格验证的净水设备出水作为饮用水。', '**安装专业级末端净水设备**：必须选择能有效去除重金属的净水技术。', '**查明并切断污染源**：此水质特征强烈暗示存在工业污染（如电镀、皮革、化工废水渗漏）或老旧含铬输水管网腐蚀。建议：'], 'ai_source': 'DeepSeek', 'analysis_time': '2026-03-15 20:14:26'}
+✅ 使用DeepSeek大模型分析结果
